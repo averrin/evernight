@@ -1,5 +1,13 @@
+body{
+    text-shadow: 0px 1px 2px #555;
+}
+
 #content {
-    padding: 10px;
+    padding: 20px;
+    // height: 800px;
+}
+#content.main {
+    margin-right: 200px;
 }
 .empty {
     background-image: url(../img/stripe_white.png);
@@ -13,6 +21,7 @@ body {
 }
 .logo {
     width: 60px;
+    cursor: pointer;
 }
 header {
     height: 40px;
@@ -47,7 +56,7 @@ header {
     -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
     -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
     box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
-    border: 1px solid #1f1f1f;
+    // border: 1px solid #1f1f1f;
     input:focus {
         background: #232323;
         color: #eeeeee;
@@ -77,3 +86,85 @@ header {
     font-size: 18pt;
     font-family: 'Felipa', cursive;
 }
+
+.left{
+    float:left;
+}
+.right{
+    float: right;
+}
+.hidden{
+    display: none;
+}
+
+header ul {
+    float: right;
+    display: inline;
+    margin: 8px;
+    list-style: none;
+}
+header ul > li{
+    float: left;
+    margin-right: 8px;
+}
+
+.inverted a {
+    font-weight: bold;
+    color: #1f1f1f;
+}
+
+.inverted button {
+    background-color: rgba(255,255,255,0.1);
+    background-image: url(/img/bg-buttons.png);
+    width: auto;
+    padding: 4px 15px 4px 15px;
+    border: 1px solid #111;
+    box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.1), 0px 1px 0px 0px rgba(255,255,255,0.1);
+    border-radius: 3px;
+    text-shadow: 0px 1px 0px #000;
+    text-decoration: none;
+    position: relative;
+    font-size: 12px;
+    color: #eee;
+    &:hover {
+        color: #ffcc00;
+    }
+    span {
+        position: absolute;
+        height: 24px;
+        width: 24px;
+        right: 0;
+        top: 0;
+        display: block;
+        text-indent: -9999px;
+        background-color: rgba(255,255,255,0.05);
+        border-left: 1px solid #222;
+        box-shadow: inset 1px 0px 0px 0px rgba(255,255,255,0.1);
+        background-image: url(/img/icon-dropdown.png);
+        background-repeat: no-repeat;
+        background-position: 6px 6px;
+    }
+    &.dropdown{
+        padding-right: 36px;
+    }
+}
+
+.well {
+    padding: 12px;
+    border-radius: 5px;
+    // height: 100%;
+}
+
+#sidebar{
+    background: -webkit-linear-gradient(top, #d6d6d6, #f0f0f0);
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 180px;
+    height: 100%;
+    border: none;
+    padding: 10px;
+    border-top: #ccc solid 1px;
+    -webkit-box-shadow: inset 1px 5px 6px -4px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 1px 5px 6px -4px rgba(0, 0, 0, 0.3);
+ }

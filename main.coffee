@@ -22,6 +22,21 @@ Meteor.startup(->
         root.Template.login.events = "keyup input": (ev)->
             if ev.keyCode is 13
                 root.login()
+        root.Template.main.events =
+            "click #logout": (ev)->
+                Meteor.logout()
+
+        root.Template.main.rendered = ->
+            if Meteor.user()
+                $('#content').addClass 'main'
+
+        root.Template.login.rendered = ->
+            $('#content').removeClass 'main'
+
+        root.Template.menu.events =
+            "click #logout_link": (ev)->
+                ev.preventDefault()
+                Meteor.logout()
 
 
         fragment = Meteor.render(->
@@ -31,5 +46,28 @@ Meteor.startup(->
                 Template.login()
         )
         $("#content").html fragment
+
+        menu = Meteor.render(->
+            if Meteor.user()
+                Template.menu()
+            else
+                ''
+        )
+        $('header').append(menu)
+        sidebar = Meteor.render(->
+            if Meteor.user()
+                Template.sidebar()
+            else
+                ''
+        )
+        $('.side').append(sidebar)
+
         console.log 'Hello Evernight'
+
+        if Meteor.user()
+            if Meteor.user()
+                console.log 'Hello, user'
+
+        $('.logo').click ->
+            window.location.reload()
 )
