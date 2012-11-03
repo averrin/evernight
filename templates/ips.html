@@ -1,0 +1,20 @@
+<template name="ips">
+    <div class="inverted well">
+
+        <h3>:new</h3>
+        <div id="new_ip">
+            <input type="text" placeholder=":title" id="title" class="styled"> <br>
+            <input type="text" placeholder=":address" id="address" class="styled">
+        </div>
+        <h3>:list</h3>
+        <ul id="ips">
+        {{# each ips}}
+            <li data-uuid="{{this._id}}">{{this.name}}: {{this.ip}}
+                <span class="right"><a href="#" class="del_ip">[:del]</a></span>
+            </li>
+        {{/each}}
+        </ul>
+
+    </div>
+
+</template>

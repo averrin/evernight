@@ -1,0 +1,56 @@
+<template name="servers">
+    <div class="inverted well">
+        {{#constant}}
+        <div class="visual_search" style="width: 80%; margin: 6px auto;"></div>
+        {{/constant}}
+    </div>
+    {{>servers_list}}
+
+</template>
+
+<template name="servers_list">
+        <div id="servers" class="inverted">
+        {{# each servers_list}}
+            <div data-uuid="{{this._id}}" class="inverted">
+                <span class="edit-links right">
+                    <!--<span class="left edit-link"><a href="#" data-uuid="{{this._id}}" class="view_server">[:view]</a></span>-->
+                    <span class="left edit-link"><a href="#" data-uuid="{{this._id}}" class="edit_server">[:json]</a></span>
+                    <span class="left edit-link"><a href="#" data-uuid="{{this._id}}" class="del_server">[:del]</a></span>
+                </span>
+                <strong>{{this.alias}} <small>[
+                    {{# if this.host}}
+                        {{this.host}}
+                    {{else}}
+                        {{this.ip}}
+                    {{/if}}
+                    ]</small></strong> <br>
+                <small>{{this.description}}</small> <br>
+                <strong>IP:</strong> {{this.ip}} <br>
+                <strong>OS:</strong> {{this.os}} <br>
+                <strong>Tags:</strong>
+                    <span class="tags">
+                        {{# each this.tags}}
+                            <span class="label label-success">{{this}}</span>
+                        {{/each}}
+                    </span> <br>
+                {{# if this.attrs}}
+                    <strong>Attributes:</strong>
+                    <ul>
+                        {{# each_with_index this.attrs}}
+                            <li>{{this}}</li>
+                        {{/each_with_index}}
+                    </ul>
+                {{/if}}
+                {{# if this.groups}}
+                    <strong>Groups:</strong>
+                    <span class="groups">
+                        {{# each this.groups}}
+                            <span class="label label-info">{{this}}</span>
+                        {{/each}}
+                    </span> <br>
+                {{/if}}
+            </div>
+        {{/each}}
+        </div>
+        <div class="inverted bottom"></div>
+</template>

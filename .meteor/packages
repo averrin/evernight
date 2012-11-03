@@ -11,3 +11,5 @@ coffeescript
 jquery
 accounts-password
 accounts-ui
+backbone
+code-prettify

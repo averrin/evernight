@@ -1,14 +1,25 @@
 <template name="main">
     <div class="inverted well">
-        <h2>Lorem</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+
+        <h3>:lorem</h3>
+            <pre class="prettyptint lang-sh">
+                sudo apt-get install python-pip python-dev
+                sudo pip install fabric bottle boto jinja2
+                git clone git@bitbucket.org:anabrodov/nervarin.git
+                cd ./nervarin
+                fab -f ./nervarin.py -R localhost init:full=True
+                tmux
+            </pre>
     </div>
 
+</template>
+
+<template name="modal">
+    <div id="{{id}}" class="reveal-modal large">
+        <h1>{{title}}</h1>
+        <div class="reveal-content">
+        <p>{{noEscape content}}</p>
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
 </template>
