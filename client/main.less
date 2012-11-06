@@ -2,14 +2,23 @@ body{
     text-shadow: 0px 1px 1px #555;
 }
 
-#content {
-    padding: 20px;
-    margin-top: 40px;
+#wrapper {
+  margin-top: 60px;
+}
+
+#left-content {
+  height: 740px;
+  margin-bottom: 0px;
+  border-radius: 5px 5px 0 0;
+}
+
+#content, #left-content {
+//    padding: 20px;
     // height: 800px;
 }
-#content.main {
-    margin-right: 200px;
-}
+//#content.main {
+//    margin-right: 200px;
+//}
 .empty {
     background-image: url(../img/stripe_white.png);
     min-height: 8px;
@@ -81,6 +90,11 @@ header {
         border: 1px solid #aa3333;
         color: #eeaaaa;
     }
+}
+.search_input input:focus,
+.search_facet input:focus {
+    color: #232323;
+    background: #eeeeee;
 }
 .title {
     padding: 6px;
@@ -229,4 +243,7 @@ pre.for_modal {
 
 .CodeMirror-scroll {
   height: 600px;
+}
+span.label{
+  cursor: pointer;
 }

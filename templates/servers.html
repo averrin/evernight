@@ -1,7 +1,10 @@
 <template name="servers">
     <div class="inverted well">
         {{#constant}}
-        <div class="visual_search" style="width: 80%; margin: 6px auto;"></div>
+        <div style="width: 90%; margin: 6px auto; height: 40px;">
+            <span class="visual_search left" style="width: 80%;"></span>
+            <button class="add_server right" style="margin-top: 4px;">New</button>
+        </div>
         {{/constant}}
     </div>
     {{>servers_list}}
@@ -19,20 +22,27 @@
                 </span>
                 <strong>{{this.alias}} <small>[
                     {{# if this.host}}
-                        {{this.host}}
+                        <a href="{{this.host}}">{{this.host}}</a>
                     {{else}}
                         {{this.ip}}
                     {{/if}}
                     ]</small></strong> <br>
-                <small>{{this.description}}</small> <br>
+                <small>&gt;&gt;&nbsp;{{this.description}}</small> <br>
                 <strong>IP:</strong> {{this.ip}} <br>
                 <strong>OS:</strong> {{this.os}} <br>
+                {{#if this.ssh}}
+                    <strong>SSH:</strong>
+                    {{# if this.ssh_password }}
+                        sshpass -p {{this.ssh_password}}{{/if}} ssh {{this.ssh_user}}@{{# if this.host }}{{this.host}}{{ else }}{{this.ip}}{{/if}} -p {{this.ssh_port}} <br />
+                {{/if}}
+                {{#if this.tags}}
                 <strong>Tags:</strong>
                     <span class="tags">
                         {{# each this.tags}}
                             <span class="label label-success">{{this}}</span>
                         {{/each}}
                     </span> <br>
+                {{/if}}
                 {{# if this.attrs}}
                     <strong>Attributes:</strong>
                     <ul>
@@ -52,5 +62,4 @@
             </div>
         {{/each}}
         </div>
-        <div class="inverted bottom"></div>
 </template>

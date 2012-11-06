@@ -53,7 +53,31 @@ root.load_fragment = (render)->
         else
             Template.login()
     )
-    $("#content").html fragment
+    $('#content').html fragment
+
+
+root.server_template =
+    "description": "Local server",
+    "tags": [],
+    "ssh_port": 22,
+    "ip": "127.0.0.1",
+    "host": "localhost",
+    "groups": [],
+    "projects": [],
+    "ftp_port": 21,
+    "other_hosts": [],
+    "alias": "localhost",
+    "ssh_user": "",
+    "ssh_password": "",
+    "ssh_cert": "",
+    "os": "linux",
+    "color": 156,
+
+root.update_serverlist = ->
+    $('.reveal-modal').trigger 'reveal:close'
+    ss = Session.get 'servers'
+    Session.set 'servers', ''
+    Session.set 'servers', ss
 
 Meteor.startup(->
 
@@ -108,10 +132,38 @@ Meteor.startup(->
                     id = root.SERVERS.findOne _id: $(this).attr 'data-uuid'
                     console.log id
                     root.SERVERS.update id, $.parseJSON(myCodeMirror.getValue())
-                    $('.reveal-modal').trigger 'reveal:close'
-                    ss = Session.get 'servers'
-                    Session.set 'servers', ''
-                    Session.set 'servers', ss
+                    root.update_serverlist()
+            "click .add_server": (ev)->
+                ev.preventDefault()
+                console.log 'add server'
+                root.dialog 'add_server', 'New server', '<div id="server_editor"><button class="right save_new_server" style="margin-top: 6px;">Save</button> </div>'
+                root.myCodeMirror = root.CodeMirror((elt) ->
+                    $('#add_server #server_editor').prepend elt
+                ,
+                    value: JSON.stringify(root.server_template, `undefined`, 4)
+                    mode: "javascript"
+                    theme: "ambiance"
+                    indentUnit: 4
+                )
+                $(".save_new_server").click (ev)->
+                    ev.preventDefault()
+                    server = $.parseJSON(myCodeMirror.getValue())
+                    server['owner'] = Meteor.user()._id
+                    root.SERVERS.insert server
+                    root.update_serverlist()
+            "click .del_server": (ev)->
+                ev.preventDefault()
+                root.SERVERS.remove this._id
+                root.update_serverlist()
+
+            "click .tags span": (ev)->
+                q = root.visualSearch.searchBox.value() + ' tags: ' + this
+                root.visualSearch.searchBox.value(q)
+                root.visualSearch.options.callbacks.search(q, root.visualSearch.searchQuery)
+            "click .groups span": (ev)->
+                q = root.visualSearch.searchBox.value() + ' groups: ' + this
+                root.visualSearch.searchBox.value(q)
+                root.visualSearch.options.callbacks.search(q, root.visualSearch.searchQuery)
 
 
 #        root.Template.servers.preserve ['.visual_search']
@@ -121,10 +173,6 @@ Meteor.startup(->
 
         root.Template.main.rendered = ->
             prettyPrint()
-
-        root.Template.sidebar.rendered = ->
-            $('#content').addClass 'main'
-#            $('#sidebar').height $('html').height()
 
         root.Template.servers.rendered = ->
             root.visualSearch = VS.init(
