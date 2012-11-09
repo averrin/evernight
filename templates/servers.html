@@ -1,5 +1,5 @@
 <template name="servers">
-    <div class="inverted well">
+    <div style="margin-bottom: 40px;">
         {{#constant}}
         <div style="width: 90%; margin: 6px auto; height: 40px;">
             <span class="visual_search left" style="width: 80%;"></span>
@@ -12,7 +12,7 @@
 </template>
 
 <template name="servers_list">
-        <div id="servers" class="inverted">
+        <div id="servers">
         {{# each servers_list}}
             <div data-uuid="{{this._id}}" class="inverted">
                 <span class="edit-links right">
