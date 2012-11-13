@@ -3,12 +3,14 @@ Meteor.startup(->
         root.Template.configs.configs = ->
             root.CONFIGS.find({owner: Meteor.user()._id}).fetch()
             
+            
         root.Template.configs.events = 
             "click .add_config": (ev)->
                 ev.preventDefault()
                 $("#add_config").remove()
                 root.dialog 'add_config', 'New server',
-                    '<input placeholder=":title" id="config_title">
+                    '<input placeholder=":title" id="config_title"> <br>
+                    <input placeholder=":comment" id="config_comment">
                     <div id="config_editor">
                         <button class="right save_new_config" style="margin-top: 6px;">Save</button>
                     </div>'
@@ -17,7 +19,7 @@ Meteor.startup(->
                     $('#add_config #config_editor').prepend elt
                 ,
                     value: ''
-                    mode: "javascript"
+                    mode: "mustache"
                     theme: "ambiance"
                     indentUnit: 4
                 )
@@ -26,6 +28,7 @@ Meteor.startup(->
                     $('.reveal-modal').trigger 'reveal:close'
                     config =
                         title: $('#config_title').val()
+                        comment: $('#config_comment').val()
                         content: myCodeMirror.getValue()
                         owner: Meteor.user()._id
                     root.CONFIGS.insert config
@@ -42,7 +45,7 @@ Meteor.startup(->
                     $('#edit_config_'+id+' #config_editor').prepend elt
                 ,
                     value: this.content
-                    mode: "javascript"
+                    mode: "mustache"
                     theme: "ambiance"
                     indentUnit: 4
                 )
@@ -51,6 +54,7 @@ Meteor.startup(->
                     id = root.CONFIGS.findOne _id: $(this).attr 'data-uuid'
                     config =
                         title: id.title
+                        comment: id.comment
                         content: myCodeMirror.getValue()
                         owner: Meteor.user()._id
                     root.CONFIGS.update id, config

@@ -22,21 +22,14 @@ root.update_servers = ->
     root.visualSearch.options.callbacks.search(Session.get('q'), root.visualSearch.searchQuery)
     
     
-root.aliases = [
-    a: 'n'
-    c: 'fab -f ~/nervarin.py'
-,
-    a: 'pipi'
-    c: 'sudo pip install'
-]
-    
+   
 root.compile_config = (config_name, server)->
     if server.aliases
-        _.each root.aliases, (e,i)->
+        _.each root.ALIASES.find(owner: Meteor.user()._id).fetch(), (e,i)->
             if _.pluck(server.aliases, 'a').indexOf(e.a) == -1
                 server.aliases.push e
     else
-        server.aliases = root.aliases
+        server.aliases = root.ALIASES.find(owner: Meteor.user()._id).fetch()
     Mustache.render(CONFIGS.findOne(title: config_name).content, server)
 
 

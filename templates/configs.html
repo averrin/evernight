@@ -7,11 +7,13 @@
     <div id="configs">
             {{# each configs}}
             <div class="inverted">
-            <strong>Title:</strong> {{this.title}}
-            <span class="right"> 
-                <span class="left edit-link"><a class="edit_config" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
-                <span class="left edit-link"><a class="del_config" href="#" data-uuid="{{this._id}}">[:del]</a></span>
-             </span></div>
+                 <span class="right"> 
+                    <span class="left edit-link"><a class="edit_config" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
+                    <span class="left edit-link"><a class="del_config" href="#" data-uuid="{{this._id}}">[:del]</a></span>
+                 </span>
+                <strong>Title:</strong> {{this.title}} <br>
+                <small class="comment"><em>#{{this.comment}}</em></small>
+            </div>
             {{/each}}
     </div>
 </template>      

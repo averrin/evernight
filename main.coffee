@@ -1,5 +1,45 @@
+###
+    TODO:
+        * CodeMirror editor creation method
+        * Edit collection dialog (maybe to sidebar)
+        * Refactor less
+###
+
 root = global ? window
 
+
+root.edit_collection = (collection)->
+    _coll = collection.find(owner: Meteor.user()._id).fetch()
+    coll = []
+    _.each _coll, (e,i)->
+        delete e._id
+        delete e.owner
+        coll.push e
+    $('#edit_collection').remove()
+    root.dialog 'edit_collection', 'Edit collection',
+        '<div id="collection_editor">
+            <button class="right save_collection" style="margin-top: 6px;">Save</button>
+        </div>'
+    root.myCodeMirror = root.CodeMirror((elt) ->
+            $('#edit_collection #collection_editor').prepend elt
+        ,
+            value: JSON.stringify(coll, `undefined`, 4)
+            mode: "javascript"
+            theme: "ambiance"
+            indentUnit: 4
+            lineWrapping: true
+        )
+    $(".save_collection").click (ev)->
+        ev.preventDefault()
+        new_coll = $.parseJSON(myCodeMirror.getValue())
+        collection.remove({})
+        _.each new_coll, (e,i)->
+            e.owner = Meteor.user()._id
+            collection.insert e
+        $('.reveal-modal').trigger 'reveal:close'
+        console.log 'TODO: save collection without recreate'
+    
+   
 root.login = ->
     counter = 0
     $('#login input').each (i,e)->
@@ -49,6 +89,15 @@ Meteor.startup(->
     
     root.CONFIGS  = new root.Meteor.Collection("CONFIGS")
     
+    root.ALIASES  = new root.Meteor.Collection("ALIASES")
+    
+    root.collections =
+        'SERVERS': root.SERVERS
+        'CONFIGS': root.CONFIGS
+        'ALIASES': root.ALIASES
+    
+    #ALIASES.insert({c:'fab -f ~/nervarin.py', a:'n', owner:Meteor.user()._id})
+    #ALIASES.insert({c:'sudo pip install', a:'pipi', owner:Meteor.user()._id})
   
     #if root.Meteor.is_server
     root.Meteor.methods
@@ -75,6 +124,14 @@ Meteor.startup(->
             console.log 'backed up'
 
     if root.Meteor.is_client
+    
+        root.Template.sidebar.events = 
+            "click .edit_collection": (ev)->
+                ev.preventDefault()
+                key = $(ev.target).attr('data-collection')
+                console.log key
+                root.edit_collection(root.collections[key])
+                
         
         root.Handlebars.registerHelper 'each_with_index', (array, obj) ->
             ret = ''
