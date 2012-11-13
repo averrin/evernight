@@ -61,7 +61,6 @@ root.login = ->
                         root.controller.navigate h, trigger: true
 
 root.init_users = ->
-    root.Accounts.createUser({username:'averrin',email:'averrin@gmail.com',password:'owertryn8',profile:{name:'Averrin'}})
     root.Accounts.createUser({username:'a',email:'a@gmail.com',password:'a',profile:{name:'Averrin'}})
     
     
