@@ -1,5 +1,7 @@
 Meteor.startup(->
     if root.Meteor.is_client
+        
+        
         root.Template.configs.configs = ->
             root.CONFIGS.find({owner: Meteor.user()._id}).fetch()
             
@@ -14,14 +16,11 @@ Meteor.startup(->
                     <div id="config_editor">
                         <button class="right save_new_config" style="margin-top: 6px;">Save</button>
                     </div>'
-
+                root.cm_config.value = ''
                 root.myCodeMirror = root.CodeMirror((elt) ->
                     $('#add_config #config_editor').prepend elt
                 ,
-                    value: ''
-                    mode: "mustache"
-                    theme: "ambiance"
-                    indentUnit: 4
+                    root.cm_config
                 )
                 $(".save_new_config").click (ev)->
                     ev.preventDefault()
@@ -41,13 +40,11 @@ Meteor.startup(->
                     '<div id="config_editor">
                         <button class="right save_config" style="margin-top: 6px;" data-uuid="'+id+'">Save</button>
                     </div>'
+                root.cm_config.value = this.content
                 root.myCodeMirror = root.CodeMirror((elt) ->
                     $('#edit_config_'+id+' #config_editor').prepend elt
                 ,
-                    value: this.content
-                    mode: "mustache"
-                    theme: "ambiance"
-                    indentUnit: 4
+                    root.cm_config
                 )
                 $(".save_config").click (ev)->
                     ev.preventDefault()

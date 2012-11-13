@@ -35,6 +35,7 @@ root.compile_config = (config_name, server)->
 
 Meteor.startup(->
     if root.Meteor.is_client
+        root.foldFunc = root.CodeMirror.newFoldFunction root.CodeMirror.braceRangeFinder
     
         root.Template.servers.events =
             "click .view_server": (ev)->
@@ -50,13 +51,11 @@ Meteor.startup(->
                 _.each this, (e,i)->
                     if _.indexOf(['owner', '_id'], i) == -1
                         content[i] = e
+                root.cm_config.value = JSON.stringify(content, `undefined`, 4)
                 root.myCodeMirror = root.CodeMirror((elt) ->
                     $('#edit_server_'+id+" #server_editor").prepend elt
                 ,
-                    value: JSON.stringify(content, `undefined`, 4)
-                    mode: "javascript"
-                    theme: "ambiance"
-                    indentUnit: 4
+                    root.cm_config
                 )
                 $('.save_server').click (ev)->
                     ev.preventDefault()
@@ -70,13 +69,11 @@ Meteor.startup(->
                 console.log 'add server'
                 $("#add_server").remove()
                 root.dialog 'add_server', 'New server', '<div id="server_editor"><button class="right save_new_server" style="margin-top: 6px;">Save</button> </div>'
+                root.cm_config.value = JSON.stringify(root.server_template, `undefined`, 4)
                 root.myCodeMirror = root.CodeMirror((elt) ->
                     $('#add_server #server_editor').prepend elt
                 ,
-                    value: JSON.stringify(root.server_template, `undefined`, 4)
-                    mode: "javascript"
-                    theme: "ambiance"
-                    indentUnit: 4
+                    root.cm_config
                 )
                 $(".save_new_server").click (ev)->
                     ev.preventDefault()

@@ -7,7 +7,6 @@
 
 root = global ? window
 
-
 root.edit_collection = (collection)->
     _coll = collection.find(owner: Meteor.user()._id).fetch()
     coll = []
@@ -20,14 +19,11 @@ root.edit_collection = (collection)->
         '<div id="collection_editor">
             <button class="right save_collection" style="margin-top: 6px;">Save</button>
         </div>'
+    root.cm_config.value = JSON.stringify(coll, `undefined`, 4)
     root.myCodeMirror = root.CodeMirror((elt) ->
             $('#edit_collection #collection_editor').prepend elt
         ,
-            value: JSON.stringify(coll, `undefined`, 4)
-            mode: "javascript"
-            theme: "ambiance"
-            indentUnit: 4
-            lineWrapping: true
+            root.cm_config
         )
     $(".save_collection").click (ev)->
         ev.preventDefault()
@@ -123,6 +119,21 @@ Meteor.startup(->
             console.log 'backed up'
 
     if root.Meteor.is_client
+
+        root.foldFunc = root.CodeMirror.newFoldFunction root.CodeMirror.braceRangeFinder
+        root.cm_config =
+            mode: "mustache"
+            theme: "ambiance"
+            indentUnit: 4
+            lineWrapping: true
+            lineNumbers: true
+            matchBrackets: true
+            onGutterClick: root.foldFunc
+            extraKeys:
+                "Ctrl-Q": (cm)->
+                    root.foldFunc cm, cm.getCursor().line
+                "Ctrl-S": (cm)->
+                    $('.reveal-content button').click()
     
         root.Template.sidebar.events = 
             "click .edit_collection": (ev)->
