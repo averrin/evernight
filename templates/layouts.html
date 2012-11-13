@@ -1,0 +1,42 @@
+ <template name="body">
+        <header class="inverted navbar-fixed-top">
+            <img src="/img/act_r.png" alt="logo" class="logo">
+            <span class="title">
+                Evernight
+            </span>
+            {{#if currentUser}}
+                {{>menu}}
+            {{/if}}
+        </header>
+
+		<content>
+        {{#if currentUser}}
+            {{>two_columns}}
+        {{else}}
+            {{>login}}            
+        {{/if}}
+		</content>
+</template>
+ 
+ <template name="two_columns">
+	<div class="row-fluid" id="wrapper">
+
+		<div class="span5 left" style="margin-left: 40px;" id="lcolumn">
+			<div id="left-content" class="well inverted">
+                {{>main}}
+			</div>
+			<div class="inverted bottom"></div>
+		</div>
+
+		<div class="span5 right"  style="margin-right: 200px;" id="rcolumn">
+				<div id="content" class="well inverted">
+                    {{>servers}}
+				</div>
+				<div class="inverted bottom"></div>
+		</div>
+        
+	
+	</div>
+
+	<div class="side inverted">{{>sidebar}}</div>
+</template>

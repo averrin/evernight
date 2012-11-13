@@ -1,0 +1,17 @@
+
+<template name="configs">
+    <div  style="margin-bottom: 10px;">
+        <span style="font-size: 18pt">:config templates</span>
+        <button class="add_config right">New config</button>
+    </div>
+    <div id="configs">
+            {{# each configs}}
+            <div class="inverted">
+            <strong>Title:</strong> {{this.title}}
+            <span class="right"> 
+                <span class="left edit-link"><a class="edit_config" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
+                <span class="left edit-link"><a class="del_config" href="#" data-uuid="{{this._id}}">[:del]</a></span>
+             </span></div>
+            {{/each}}
+    </div>
+</template>      

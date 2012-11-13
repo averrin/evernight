@@ -9,11 +9,14 @@
                 fab -f ./nervarin.py -R localhost init:full=True
                 tmux
             </pre>
+            
+            {{>configs}}
+            
 
 </template>
 
 <template name="modal">
-    <div id="{{id}}" class="reveal-modal large">
+    <div id="{{id}}" class="reveal-modal large inverted">
         <h1>{{title}}</h1>
         <div class="reveal-content">
         <p>{{noEscape content}}</p>
@@ -21,3 +24,4 @@
         <a class="close-reveal-modal">&#215;</a>
     </div>
 </template>
+      

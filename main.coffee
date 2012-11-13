@@ -47,6 +47,10 @@ Meteor.startup(->
 
     root.SERVERS  = new root.Meteor.Collection("SERVERS")
     
+    root.CONFIGS  = new root.Meteor.Collection("CONFIGS")
+    
+  
+    #if root.Meteor.is_server
     root.Meteor.methods
         upload_servers: ->
             fs = __meteor_bootstrap__.require("fs")
@@ -71,7 +75,6 @@ Meteor.startup(->
             console.log 'backed up'
 
     if root.Meteor.is_client
-        
         
         root.Handlebars.registerHelper 'each_with_index', (array, obj) ->
             ret = ''
