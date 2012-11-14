@@ -1,0 +1,2 @@
+{ "c" : "fab -f ~/nervarin.py", "a" : "n", "owner" : "a4529fc0-02f6-453e-817e-ad4abdc087cc", "_id" : "5f394b10-f7dc-45a7-800a-c45be31b3135" }
+{ "c" : "sudo pip install", "a" : "pipi", "owner" : "a4529fc0-02f6-453e-817e-ad4abdc087cc", "_id" : "8514cafd-72ad-49af-b960-f8cd49030cc6" }
