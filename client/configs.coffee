@@ -2,7 +2,7 @@ Meteor.startup(->
     if root.Meteor.is_client       
         
         root.Template.configs.configs = ->
-            root.CONFIGS.find({owner: Meteor.user()._id}).fetch()
+            root.CONFIGS.find().fetch()
             
             
         root.Template.configs.events = 
@@ -47,13 +47,7 @@ Meteor.startup(->
                 )
                 $(".save_config").click (ev)->
                     ev.preventDefault()
-                    id = root.CONFIGS.findOne _id: $(this).attr 'data-uuid'
-                    config =
-                        title: id.title
-                        comment: id.comment
-                        content: myCodeMirror.getValue()
-                        owner: Meteor.user()._id
-                    root.CONFIGS.update id, config
+                    root.CONFIGS.update {_id: $(ev.target).attr('data-uuid')}, {$set: {content: myCodeMirror.getValue()}}
                     $('.reveal-modal').trigger 'reveal:close'
                 
             "click .del_config": (ev)->

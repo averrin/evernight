@@ -143,7 +143,80 @@ Meteor.startup(->
     #ALIASES.insert({c:'fab -f ~/nervarin.py', a:'n', owner:Meteor.user()._id})
     #ALIASES.insert({c:'sudo pip install', a:'pipi', owner:Meteor.user()._id})
   
-    #if root.Meteor.is_server
+    if root.Meteor.is_server
+        Meteor.publish '', ->
+            root.SERVERS.find(owner: this.userId)
+            
+        root.SERVERS.allow
+            insert: (userId, doc) ->
+                userId and doc.owner is userId
+
+            update: (userId, docs, fields, modifier) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+
+            remove: (userId, docs) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+            fetch: ["owner"]
+            
+        Meteor.publish '', ->
+            root.CONFIGS.find(owner: this.userId)
+            
+        root.CONFIGS.allow
+            insert: (userId, doc) ->
+                userId and doc.owner is userId
+
+            update: (userId, docs, fields, modifier) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+
+            remove: (userId, docs) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+            fetch: ["owner"]
+            
+        Meteor.publish '', ->
+            root.ALIASES.find(owner: this.userId)
+            
+        root.ALIASES.allow
+            insert: (userId, doc) ->
+                userId and doc.owner is userId
+
+            update: (userId, docs, fields, modifier) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+
+            remove: (userId, docs) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+            fetch: ["owner"]
+            
+        Meteor.publish '', ->
+            root.KEYS.find(owner: this.userId)
+            
+        root.KEYS.allow
+            insert: (userId, doc) ->
+                userId and doc.owner is userId
+
+            update: (userId, docs, fields, modifier) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+
+            remove: (userId, docs) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+            fetch: ["owner"]
+            
+ 
     root.Meteor.methods
         upload_servers: ->
             fs = __meteor_bootstrap__.require("fs")
@@ -172,7 +245,6 @@ Meteor.startup(->
         root.Template.body.rendered = ->
             if window.location.hostname is 'en.averr.in'
                 if not $('.title:first').html().match(/.*\[dev\]/)
-                    console.log 'Dev server'
                     $('.title:first').append '[dev]'
                     
         root.Template.main.lorem = ->

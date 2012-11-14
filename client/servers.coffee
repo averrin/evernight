@@ -25,11 +25,11 @@ root.update_servers = ->
    
 root.compile_config = (config_name, server)->
     if server.aliases
-        _.each root.ALIASES.find(owner: Meteor.user()._id).fetch(), (e,i)->
+        _.each root.ALIASES.find().fetch(), (e,i)->
             if _.pluck(server.aliases, 'a').indexOf(e.a) == -1
                 server.aliases.push e
     else
-        server.aliases = root.ALIASES.find(owner: Meteor.user()._id).fetch()
+        server.aliases = root.ALIASES.find().fetch()
     Mustache.render(CONFIGS.findOne(title: config_name).content, server)
 
 
@@ -58,10 +58,8 @@ Meteor.startup(->
                 )
                 $('.save_server').click (ev)->
                     ev.preventDefault()
-                    id = root.SERVERS.findOne _id: $(this).attr 'data-uuid'
                     content = $.parseJSON(myCodeMirror.getValue())
-                    content['owner'] = Meteor.user()._id
-                    root.SERVERS.update id, content
+                    root.SERVERS.update {_id: $(ev.target).attr('data-uuid')}, {$set: content}
                     root.update_servers()
             "click .add_server": (ev)->
                 ev.preventDefault()
@@ -89,7 +87,7 @@ Meteor.startup(->
                 ev.preventDefault()
                 $("#view_config").remove()
                 config_select = '<select id="config_title">'
-                _.each CONFIGS.find(owner: Meteor.user()._id).fetch(), (e,i)->
+                _.each CONFIGS.find().fetch(), (e,i)->
                     config_select += '<option value="' + e.title + '">' + e.title + '</option>'
                 config_select += '</select>'
                 root.dialog 'view_config', 'View configs',
@@ -124,7 +122,7 @@ Meteor.startup(->
             if ss
                 return ss
             else
-                root.SERVERS.find({owner: Meteor.user()._id}, {sort: {alias:1}}).fetch()
+                root.SERVERS.find({}, {sort: {alias:1}}).fetch()
             
 
         root.Template.servers.rendered = ->
@@ -151,7 +149,7 @@ Meteor.startup(->
                         callback ['ip', 'host', 'tags', 'groups', 'alias', 'os']
 
                     valueMatches: (facet, searchTerm, callback) ->
-                        ss = root.SERVERS.find(owner: Meteor.user()._id).fetch()
+                        ss = root.SERVERS.find().fetch()
                         switch facet
                             when "alias"
                                 r = []
