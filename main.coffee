@@ -7,6 +7,39 @@
 
 root = global ? window
 
+root.online = ->
+    console.log 'online'
+    
+root.offline = ->
+    console.log 'offline'
+
+root.ping = (ip, online, offline) ->
+    _that = this
+    @good = online
+    @bad = offline
+    @ans = false
+    @ip = ip
+    @img = new Image()
+    @img.onload = ->
+        if not _that.ans
+            _that.ans = true
+            _that.good()
+
+    @img.onerror = ->
+        if not _that.ans
+            _that.ans = true
+            _that.good()
+
+    @start = new Date().getTime()
+    @img.src = "http://" + _that.ip
+    @timer = setTimeout(->
+        if not _that.ans
+            _that.ans = true
+            _that.bad()
+    , 1500)
+
+
+    
 root.edit_collection = (collection, filtered)->
     if not filtered
         _coll = collection.find(owner: Meteor.user()._id).fetch()
@@ -141,10 +174,21 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     console.log 'Dev server'
                     $('.title:first').append '[dev]'
+                    
+        root.Template.main.lorem = ->
+            user = Meteor.users.findOne({_id: Meteor.user()._id})
+            if user and user.profile.lorem
+                return user.profile.lorem
+            else
+                'Lorem ipsum'
     
-        Session.set 'collections', ['Servers', 'Configs', 'Aliases', 'Keys']
+        #Session.set 'collections', Meteor.users.findOne({_id: Meteor.user()._id}).profile.collections
         root.Template.sidebar.collections = ->
-            Session.get 'collections'
+            user = Meteor.users.findOne({_id: Meteor.user()._id})
+            if user
+                return user.profile.collections
+            else
+                []
             
             
 

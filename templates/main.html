@@ -1,14 +1,7 @@
 <template name="main">
 
         <h3>:lorem</h3>
-            <pre class="prettyptint lang-sh">
-                sudo apt-get install python-pip python-dev
-                sudo pip install fabric bottle boto jinja2
-                git clone git@bitbucket.org:anabrodov/nervarin.git
-                cd ./nervarin
-                fab -f ./nervarin.py -R localhost init:full=True
-                tmux
-            </pre>
+            {{noEscape lorem}}
             
             {{>configs}}
             
