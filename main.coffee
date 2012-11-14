@@ -7,13 +7,16 @@
 
 root = global ? window
 
-root.edit_collection = (collection)->
-    _coll = collection.find(owner: Meteor.user()._id).fetch()
-    coll = []
-    _.each _coll, (e,i)->
-        delete e._id
-        delete e.owner
-        coll.push e
+root.edit_collection = (collection, filtered)->
+    if not filtered
+        _coll = collection.find(owner: Meteor.user()._id).fetch()
+        coll = []
+        _.each _coll, (e,i)->
+            delete e._id
+            delete e.owner
+            coll.push e
+    else
+        coll = collection
     $('#edit_collection').remove()
     root.dialog 'edit_collection', 'Edit collection',
         '<div id="collection_editor">
@@ -25,15 +28,24 @@ root.edit_collection = (collection)->
         ,
             root.cm_config
         )
-    $(".save_collection").click (ev)->
-        ev.preventDefault()
-        new_coll = $.parseJSON(myCodeMirror.getValue())
-        collection.remove({})
-        _.each new_coll, (e,i)->
-            e.owner = Meteor.user()._id
-            collection.insert e
-        $('.reveal-modal').trigger 'reveal:close'
-        console.log 'TODO: save collection without recreate'
+
+        
+    if not filtered
+        $(".save_collection").click (ev)->
+            ev.preventDefault()
+            new_coll = $.parseJSON(myCodeMirror.getValue())
+            collection.remove({owner: Meteor.user()._id})
+            _.each new_coll, (e,i)->
+                e.owner = Meteor.user()._id
+                collection.insert e
+            $('.reveal-modal').trigger 'reveal:close'
+            console.log 'TODO: save collection without recreate'
+    else
+        $(".save_collection").click (ev)->
+            ev.preventDefault()
+            Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: $.parseJSON(myCodeMirror.getValue())}})
+            $('.reveal-modal').trigger 'reveal:close'
+        
     
    
 root.login = ->
@@ -86,10 +98,14 @@ Meteor.startup(->
     
     root.ALIASES  = new root.Meteor.Collection("ALIASES")
     
+    root.KEYS  = new root.Meteor.Collection("KEYS")
+    
     root.collections =
-        'SERVERS': root.SERVERS
-        'CONFIGS': root.CONFIGS
-        'ALIASES': root.ALIASES
+        'Servers': root.SERVERS
+        'Configs': root.CONFIGS
+        'Aliases': root.ALIASES
+        'Keys': root.KEYS
+        
     
     #ALIASES.insert({c:'fab -f ~/nervarin.py', a:'n', owner:Meteor.user()._id})
     #ALIASES.insert({c:'sudo pip install', a:'pipi', owner:Meteor.user()._id})
@@ -119,6 +135,18 @@ Meteor.startup(->
             console.log 'backed up'
 
     if root.Meteor.is_client
+    
+        root.Template.body.rendered = ->
+            if window.location.hostname is 'en.averr.in'
+                if not $('.title:first').html().match(/.*\[dev\]/)
+                    console.log 'Dev server'
+                    $('.title:first').append '[dev]'
+    
+        Session.set 'collections', ['Servers', 'Configs', 'Aliases', 'Keys']
+        root.Template.sidebar.collections = ->
+            Session.get 'collections'
+            
+            
 
         root.foldFunc = root.CodeMirror.newFoldFunction root.CodeMirror.braceRangeFinder
         root.cm_config =
@@ -139,8 +167,15 @@ Meteor.startup(->
             "click .edit_collection": (ev)->
                 ev.preventDefault()
                 key = $(ev.target).attr('data-collection')
-                console.log key
                 root.edit_collection(root.collections[key])
+            "mouseenter .side>.inverted": (ev)->
+                console.log ev.target
+                $(ev.target).toggleClass 'hovered'
+                
+            "click .edit_profile": (ev)->
+                ev.preventDefault()
+                root.edit_collection Meteor.user().profile, true
+                
                 
         
         root.Handlebars.registerHelper 'each_with_index', (array, obj) ->

@@ -15,24 +15,22 @@
         	<li><a href="#">Main</a></li>
         	<li><a href="#!/servers">Servers</a></li>
         </ul>-->
-        <strong style="padding: 6px">:collections</strong>
-        <!--TODO: iterate in collections-->
         <div class="inverted" style="padding: 6px;">
-            Aliases
-            <span class="right"> 
-                <span class="left"><a class="edit_collection" href="#" data-collection="ALIASES">[:edit]</a></span>
-            </span>
+            <strong>:collections</strong>
         </div>
-        <div class="inverted" style="padding: 6px;">
-            Configs
-            <span class="right"> 
-                <span class="left"><a class="edit_collection" href="#" data-collection="CONFIGS">[:edit]</a></span>
-            </span>
-        </div>
-        <div class="inverted" style="padding: 6px;">
-            Servers
-            <span class="right"> 
-                <span class="left"><a class="edit_collection" href="#" data-collection="SERVERS">[:edit]</a></span>
-            </span>
-        </div>
+        {{# each collections}}
+            <div class="inverted" style="padding: 6px;">
+                {{this}}
+                <span class="right"> 
+                    <span class="left"><a class="edit_collection" href="#" data-collection="{{this}}">[:edit]</a></span>
+                </span>
+            </div>
+        {{/each}}
+            <div class="inverted" style="padding: 6px;">
+                Main
+                <span class="right"> 
+                    <span class="left"><a class="edit_profile" href="#">[:edit]</a></span>
+                </span>
+            </div>
+
 </template>

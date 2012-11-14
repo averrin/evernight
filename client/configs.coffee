@@ -1,6 +1,5 @@
 Meteor.startup(->
-    if root.Meteor.is_client
-        
+    if root.Meteor.is_client       
         
         root.Template.configs.configs = ->
             root.CONFIGS.find({owner: Meteor.user()._id}).fetch()
@@ -61,5 +60,9 @@ Meteor.startup(->
                 ev.preventDefault()
                 console.log 'del config'
                 root.CONFIGS.remove this._id
+                
+            "mouseenter .side>.inverted": (ev)->
+                console.log ev.target
+                $(ev.target).toggleClass 'hovered'
                 
 )

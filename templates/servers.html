@@ -3,7 +3,7 @@
         {{#constant}}
         <div style="width: 90%; margin: 6px auto; height: 40px;">
             <span class="visual_search left" style="width: 80%;"></span>
-            <button class="add_server right" style="margin-top: 4px;">New</button>
+            <button class="add_server right" style="margin-top: 4px;">New Server</button>
         </div>
         {{/constant}}
     </div>
@@ -28,7 +28,7 @@
                         {{this.ip}}
                     {{/if}}
                     ]</small></strong> <br>
-                <small>&gt;&gt;&nbsp;{{this.description}}</small> <br>
+			<small class="comment"><em>#{{this.description}}</em></small> <br>
                 <strong>IP:</strong> {{this.ip}} <br>
                 <strong>OS:</strong> {{this.os}} <br>
                 {{#if this.ssh}}

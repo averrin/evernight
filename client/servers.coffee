@@ -35,7 +35,6 @@ root.compile_config = (config_name, server)->
 
 Meteor.startup(->
     if root.Meteor.is_client
-        root.foldFunc = root.CodeMirror.newFoldFunction root.CodeMirror.braceRangeFinder
     
         root.Template.servers.events =
             "click .view_server": (ev)->

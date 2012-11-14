@@ -45,7 +45,6 @@ header {
     }
 }
 .inverted {
-    background-color: #eee;
     color: #1a1a1a;
     background: #d6d6d6;
     background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#d6d6d6));
@@ -80,6 +79,15 @@ header {
         background-color: #553333;
         border: 1px solid #aa3333;
         color: #eeaaaa;
+    }
+    &.hovered {
+        background: #a6a6a6;
+        background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#a6a6a6));
+        background: -webkit-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -moz-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -ms-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -o-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background-image: -ms-linear-gradient(top, #f0f0f0 0%, #a6a6a6 100%);
     }
 }
 .search_input input:focus,
