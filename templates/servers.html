@@ -1,9 +1,10 @@
 <template name="servers">
     <div style="margin-bottom: 40px;">
         {{#constant}}
-        <div style="width: 90%; margin: 6px auto; height: 40px;">
-            <span class="visual_search left" style="width: 80%;"></span>
-            <button class="add_server right" style="margin-top: 4px;">New Server</button>
+        <div style="margin: 6px auto; height: 40px;">
+            
+            <button class="add_server left" style="margin-top: 4px; margin-right: 10px;">New Server</button>
+            <span class="visual_search left" style="min-width: 20%;"></span>
         </div>
         {{/constant}}
     </div>
@@ -28,7 +29,7 @@
                         {{this.ip}}
                     {{/if}}
                     ]</small></strong> <br>
-			<small class="comment"><em>#{{this.description}}</em></small> <br>
+                <small>&gt;&gt;&nbsp;{{this.description}}</small> <br>
                 <strong>IP:</strong> {{this.ip}} <br>
                 <strong>OS:</strong> {{this.os}} <br>
                 {{#if this.ssh}}

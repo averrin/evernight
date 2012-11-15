@@ -66,7 +66,6 @@ Meteor.startup(->
                         myCodeMirror.openDialog root.json_error
             "click .add_server": (ev)->
                 ev.preventDefault()
-                console.log 'add server'
                 $("#add_server").remove()
                 root.dialog 'add_server', 'New server', '<div id="server_editor"><button class="right save_new_server" style="margin-top: 6px;">Save</button> </div>'
                 root.cm_config.value = JSON.stringify(root.server_template, `undefined`, 4)

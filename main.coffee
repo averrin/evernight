@@ -136,44 +136,6 @@ root.pr = ->
     console.log 'process hash', root.h
     root.controller.navigate root.h, true
     
-root.shortcuts = [
-            "key": "x"
-            "desc": "Toggle sidebar"
-            "func": ->
-                root.toggle_sidebar()
-        ,
-            "key": "m"
-            "desc": "Edit Main collection"
-            "func": ->
-                root.edit_collection Meteor.user().profile, true
-        ,
-            "key": "s"
-            "desc": "Edit Servers collection"
-            "func": ->
-                root.edit_collection root.collections['Servers']
-        ,
-            "key": "c"
-            "desc": "Edit Configs collection"
-            "func": ->
-                root.edit_collection root.collections['Configs']
-        ,
-            "key": "a"
-            "desc": "Edit Aliases collection"
-            "func": ->
-                root.edit_collection root.collections['Aliases']
-        ,
-            "key": "k"
-            "desc": "Edit Keys collection"
-            "func": ->
-                root.edit_collection root.collections['Keys']
-        ,
-            "key": "esc"
-            "desc": "Close modal dialog"
-            "func": ->
-                $('.reveal-modal').trigger 'reveal:close'
-    ]
-
-
 Meteor.startup(->
 
     root.SERVERS  = new root.Meteor.Collection("SERVERS")
@@ -424,6 +386,8 @@ Meteor.startup(->
         $('body').append Meteor.render(->
             Template.body()
         )
+        
+        console.log "Evernight Init"
               
 
 )
