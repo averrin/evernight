@@ -21,14 +21,14 @@
  <template name="two_columns">
 	<div class="row-fluid" id="wrapper">
 
-		<div class="span5 left" style="margin-left: 40px;" id="lcolumn">
+		<div class="span6 left" style="margin-left: 40px;" id="lcolumn">
 			<div id="left-content" class="well inverted">
                 {{>main}}
 			</div>
 			<div class="inverted bottom"></div>
 		</div>
 
-		<div class="span5 right"  style="margin-right: 200px;" id="rcolumn">
+		<div class="span5 right"  style="" id="rcolumn">
 				<div id="content" class="well inverted">
                     {{>servers}}
 				</div>
@@ -38,5 +38,5 @@
 	
 	</div>
 
-	<div class="side inverted">{{>sidebar}}</div>
+	<div class="side inverted" style="display: none;">{{>sidebar}}</div>
 </template>

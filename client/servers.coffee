@@ -63,9 +63,7 @@ Meteor.startup(->
                         root.SERVERS.update {_id: $(ev.target).attr('data-uuid')}, {$set: content}
                         root.update_servers()
                     catch error
-                        myCodeMirror.openDialog '<div class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&#215;</button>
-                            <strong>Error!</strong> Bad JSON format!</div>'
+                        myCodeMirror.openDialog root.json_error
             "click .add_server": (ev)->
                 ev.preventDefault()
                 console.log 'add server'
@@ -85,9 +83,7 @@ Meteor.startup(->
                         root.SERVERS.insert server
                         root.update_servers()
                     catch error
-                        myCodeMirror.openDialog '<div class="alert alert-error">
-                            <button type="button" class="close" data-dismiss="alert">&#215;</button>
-                            <strong>Error!</strong> Bad JSON format!</div>'
+                        myCodeMirror.openDialog root.json_error
             "click .del_server": (ev)->
                 ev.preventDefault()
                 root.SERVERS.remove this._id

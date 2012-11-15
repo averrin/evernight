@@ -12,6 +12,11 @@ root.online = ->
     
 root.offline = ->
     console.log 'offline'
+    
+root.toggle_sidebar = ->
+    $(".side").toggle "slide",
+        direction: "right"
+    , 1000
 
 root.ping = (ip, online, offline) ->
     _that = this
@@ -37,7 +42,10 @@ root.ping = (ip, online, offline) ->
             _that.ans = true
             _that.bad()
     , 1500)
-
+    
+root.json_error = '<div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&#215;</button>
+                    <strong>Error!</strong> Bad JSON format!</div>'
 
     
 root.edit_collection = (collection, filtered)->
@@ -75,9 +83,7 @@ root.edit_collection = (collection, filtered)->
                 $('.reveal-modal').trigger 'reveal:close'
                 console.log 'TODO: save collection without recreate'
             catch error
-                myCodeMirror.openDialog '<div class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&#215;</button>
-                    <strong>Error!</strong> Bad JSON format!</div>'
+                myCodeMirror.openDialog root.json_error
     else
         $(".save_collection").click (ev)->
             ev.preventDefault()
@@ -85,9 +91,7 @@ root.edit_collection = (collection, filtered)->
                 Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: $.parseJSON(myCodeMirror.getValue())}})
                 $('.reveal-modal').trigger 'reveal:close'
             catch error
-                myCodeMirror.openDialog '<div class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&#215;</button>
-                    <strong>Error!</strong> Bad JSON format!</div>'
+                myCodeMirror.openDialog root.json_error
         
     
    
@@ -257,6 +261,9 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
                     
+                root.Mousetrap.bind "s", ->
+                    root.toggle_sidebar()
+                    
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
             if user and user.profile.lorem
@@ -301,6 +308,10 @@ Meteor.startup(->
             "click .edit_profile": (ev)->
                 ev.preventDefault()
                 root.edit_collection Meteor.user().profile, true
+                
+            "click .hide_sidebar": (ev)->
+                ev.preventDefault()
+                root.toggle_sidebar()
                 
                 
         
