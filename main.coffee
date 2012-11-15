@@ -271,6 +271,9 @@ Meteor.startup(->
                         <li><strong>&lt;{{key}}&gt;</strong>&nbsp;&mdash;&nbsp;{{desc}}</li>
                     {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
                     
+            $('.title').click ->
+                root.toggle_sidebar()
+                    
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
             if user and user.profile.lorem
