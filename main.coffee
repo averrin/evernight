@@ -261,8 +261,8 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
                     
-                root.Mousetrap.bind "s", ->
-                    root.toggle_sidebar()
+            root.Mousetrap.bind "s", ->
+                root.toggle_sidebar()
                     
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
