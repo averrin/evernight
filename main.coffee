@@ -66,18 +66,28 @@ root.edit_collection = (collection, filtered)->
     if not filtered
         $(".save_collection").click (ev)->
             ev.preventDefault()
-            new_coll = $.parseJSON(myCodeMirror.getValue())
-            collection.remove({owner: Meteor.user()._id})
-            _.each new_coll, (e,i)->
-                e.owner = Meteor.user()._id
-                collection.insert e
-            $('.reveal-modal').trigger 'reveal:close'
-            console.log 'TODO: save collection without recreate'
+            try
+                new_coll = $.parseJSON(myCodeMirror.getValue())
+                collection.remove({owner: Meteor.user()._id})
+                _.each new_coll, (e,i)->
+                    e.owner = Meteor.user()._id
+                    collection.insert e
+                $('.reveal-modal').trigger 'reveal:close'
+                console.log 'TODO: save collection without recreate'
+            catch error
+                myCodeMirror.openDialog '<div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&#215;</button>
+                    <strong>Error!</strong> Bad JSON format!</div>'
     else
         $(".save_collection").click (ev)->
             ev.preventDefault()
-            Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: $.parseJSON(myCodeMirror.getValue())}})
-            $('.reveal-modal').trigger 'reveal:close'
+            try
+                Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: $.parseJSON(myCodeMirror.getValue())}})
+                $('.reveal-modal').trigger 'reveal:close'
+            catch error
+                myCodeMirror.openDialog '<div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&#215;</button>
+                    <strong>Error!</strong> Bad JSON format!</div>'
         
     
    
@@ -250,7 +260,7 @@ Meteor.startup(->
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
             if user and user.profile.lorem
-                return user.profile.lorem
+                return root.Mustache.render(user.profile.lorem, user.profile)
             else
                 'Lorem ipsum'
     

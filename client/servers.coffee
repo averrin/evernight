@@ -58,9 +58,14 @@ Meteor.startup(->
                 )
                 $('.save_server').click (ev)->
                     ev.preventDefault()
-                    content = $.parseJSON(myCodeMirror.getValue())
-                    root.SERVERS.update {_id: $(ev.target).attr('data-uuid')}, {$set: content}
-                    root.update_servers()
+                    try
+                        content = $.parseJSON(myCodeMirror.getValue())
+                        root.SERVERS.update {_id: $(ev.target).attr('data-uuid')}, {$set: content}
+                        root.update_servers()
+                    catch error
+                        myCodeMirror.openDialog '<div class="alert alert-error">
+                            <button type="button" class="close" data-dismiss="alert">&#215;</button>
+                            <strong>Error!</strong> Bad JSON format!</div>'
             "click .add_server": (ev)->
                 ev.preventDefault()
                 console.log 'add server'
@@ -74,10 +79,15 @@ Meteor.startup(->
                 )
                 $(".save_new_server").click (ev)->
                     ev.preventDefault()
-                    server = $.parseJSON(myCodeMirror.getValue())
-                    server['owner'] = Meteor.user()._id
-                    root.SERVERS.insert server
-                    root.update_servers()
+                    try
+                        server = $.parseJSON(myCodeMirror.getValue())
+                        server['owner'] = Meteor.user()._id
+                        root.SERVERS.insert server
+                        root.update_servers()
+                    catch error
+                        myCodeMirror.openDialog '<div class="alert alert-error">
+                            <button type="button" class="close" data-dismiss="alert">&#215;</button>
+                            <strong>Error!</strong> Bad JSON format!</div>'
             "click .del_server": (ev)->
                 ev.preventDefault()
                 root.SERVERS.remove this._id
