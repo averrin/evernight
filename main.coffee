@@ -135,6 +135,43 @@ root.pr = ->
     root.controller[k]()
     console.log 'process hash', root.h
     root.controller.navigate root.h, true
+    
+root.shortcuts = [
+            "key": "x"
+            "desc": "Toggle sidebar"
+            "func": ->
+                root.toggle_sidebar()
+        ,
+            "key": "m"
+            "desc": "Edit Main collection"
+            "func": ->
+                root.edit_collection Meteor.user().profile, true
+        ,
+            "key": "s"
+            "desc": "Edit Servers collection"
+            "func": ->
+                root.edit_collection root.collections['Servers']
+        ,
+            "key": "c"
+            "desc": "Edit Configs collection"
+            "func": ->
+                root.edit_collection root.collections['Configs']
+        ,
+            "key": "a"
+            "desc": "Edit Aliases collection"
+            "func": ->
+                root.edit_collection root.collections['Aliases']
+        ,
+            "key": "k"
+            "desc": "Edit Keys collection"
+            "func": ->
+                root.edit_collection root.collections['Keys']
+        ,
+            "key": "esc"
+            "desc": "Close modal dialog"
+            "func": ->
+                $('.reveal-modal').trigger 'reveal:close'
+    ]
 
 
 Meteor.startup(->
@@ -261,26 +298,16 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
                     
-            root.Mousetrap.bind "x", ->
-                root.toggle_sidebar()
+            _.each root.shortcuts, (e,i)->
+                root.Mousetrap.bind e.key, e.func
                 
-            root.Mousetrap.bind ["s", "k", "c", "a"], (e,c)->
-                map = 
-                    s: 'Servers'
-                    k: 'Keys'
-                    c: 'Configs'
-                    a: 'Aliases'
-                root.edit_collection root.collections[map[c]]
-                return false
                 
-            root.Mousetrap.bind 'm', ->
-                root.edit_collection Meteor.user().profile, true
-                
-            root.Mousetrap.bind "esc", ->
-                $('.reveal-modal').trigger 'reveal:close'
-                
-            root.Mousetrap.bind "i a", ->
-                console.log 'i a fired'
+            root.Mousetrap.bind "?", ->
+                root.dialog 'help', 'Help', root.Mustache.render('
+                    <h3>:keys</h3>
+                    <ul>{{#shortcuts}}
+                        <li><strong>&lt;{{key}}&gt;</strong>&nbsp;&mdash;&nbsp;{{desc}}</li>
+                    {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
                     
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
