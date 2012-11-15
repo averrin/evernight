@@ -261,8 +261,26 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
                     
-            root.Mousetrap.bind "s", ->
+            root.Mousetrap.bind "x", ->
                 root.toggle_sidebar()
+                
+            root.Mousetrap.bind ["s", "k", "c", "a"], (e,c)->
+                map = 
+                    s: 'Servers'
+                    k: 'Keys'
+                    c: 'Configs'
+                    a: 'Aliases'
+                root.edit_collection root.collections[map[c]]
+                return false
+                
+            root.Mousetrap.bind 'm', ->
+                root.edit_collection Meteor.user().profile, true
+                
+            root.Mousetrap.bind "esc", ->
+                $('.reveal-modal').trigger 'reveal:close'
+                
+            root.Mousetrap.bind "i a", ->
+                console.log 'i a fired'
                     
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
