@@ -280,6 +280,13 @@ Meteor.startup(->
                 return root.Mustache.render(user.profile.lorem, user.profile)
             else
                 'Lorem ipsum'
+                
+        root.Template.main.placeholder = ->
+            user = Meteor.users.findOne({_id: Meteor.user()._id})
+            if user and user.profile.lorem
+                return root.Mustache.render(user.profile.placeholder, user.profile)
+            else
+                'Lorem ipsum'
     
         #Session.set 'collections', Meteor.users.findOne({_id: Meteor.user()._id}).profile.collections
         root.Template.sidebar.collections = ->
@@ -354,6 +361,12 @@ Meteor.startup(->
 
         root.Template.main.rendered = ->
             prettyPrint()
+            $("#placeholder").contentEditable().change (e)->
+                if e.action is 'save'
+                    data = Meteor.user().profile
+                    data.placeholder = $('#placeholder p').html()
+                    Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: data}})
+                    console.log Meteor.user().profile.placeholder
 
 
         root.Template.menu.events =
