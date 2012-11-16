@@ -364,9 +364,8 @@ Meteor.startup(->
             $("#placeholder").contentEditable().change (e)->
                 if e.action is 'save'
                     data = Meteor.user().profile
-                    data.placeholder = $('#placeholder p').html()
+                    data.placeholder = $('<div/>').html($('#placeholder div').html()).text()
                     Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: data}})
-                    console.log Meteor.user().profile.placeholder
 
 
         root.Template.menu.events =

@@ -28,6 +28,9 @@
 			// add triggers
 			$this.live('focus', function() {
 				var $this = $(this);
+                if($this.html().match(/</)){
+                    $this.html(_.escape($this.html()))
+                    }
 				$this.data('enter', $this.html());
 				$this.data('before', $this.html());
 				return $this;
