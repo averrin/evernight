@@ -364,7 +364,7 @@ Meteor.startup(->
             $("#placeholder").contentEditable().change (e)->
                 if e.action is 'save'
                     data = Meteor.user().profile
-                    data.placeholder = $('<div/>').html($('#placeholder div').html()).text()
+                    data.placeholder = $('<div/>').html($('#placeholder div').html().replace('<br>', '&lt;br&gt;')).text()
                     Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: data}})
 
 

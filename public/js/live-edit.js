@@ -28,6 +28,7 @@
 			// add triggers
 			$this.live('focus', function() {
 				var $this = $(this);
+                $this.html(Meteor.user().profile.placeholder)
                 if($this.html().match(/</)){
                     $this.html(_.escape($this.html()))
                     }
@@ -47,12 +48,12 @@
 			}).live('blur', function() {
 				var $this = $(this);
 				var text = $this.html();
-				if ($this.data('enter') !== text) {
+				//if ($this.data('enter') !== text) {
 					$this.data('enter', text);
 					var data = {};
 					data[key] = text;
 					parent.trigger({type: 'change', action : 'save', changed: data});
-				}
+				//}
 				return $this;
 			})
 	 	});
