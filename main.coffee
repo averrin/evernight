@@ -228,6 +228,11 @@ Meteor.startup(->
                     doc.owner is userId
 
             fetch: ["owner"]
+
+        root.collectionApi = new root.CollectionAPI()
+        root.collectionApi.addCollection(root.SERVERS, 'SERVERS')
+        root.collectionApi.addCollection(root.KEYS, 'KEYS')
+        root.collectionApi.start()
             
  
     root.Meteor.methods
