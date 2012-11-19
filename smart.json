@@ -1,0 +1,8 @@
+{
+  "packages": {
+    "observatory": {},
+    "collection-api": {},
+    "node-modules": {},
+    "aloha-editor": {}
+  }
+}

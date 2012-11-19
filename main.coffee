@@ -14,9 +14,12 @@ root.offline = ->
     console.log 'offline'
     
 root.toggle_sidebar = ->
-    $(".side").toggle "slide",
-        direction: "right"
-    , 1000
+    if not root.right.isOpen
+        root.right.open '500', ->
+            console.log root.right
+    else
+        root.right.close '500', ->
+            console.log root.right
 
 root.ping = (ip, online, offline) ->
     _that = this
@@ -278,6 +281,8 @@ Meteor.startup(->
                     
             $('.title').click ->
                 root.toggle_sidebar()
+                
+            root.right.show()
                     
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
@@ -405,6 +410,10 @@ Meteor.startup(->
 
         $('body').append Meteor.render(->
             Template.body()
+        )
+        
+        $('.aloha-sidebar-inner').html Meteor.render(->
+            Template.sidebar()
         )
         
         console.log "Evernight Init"
