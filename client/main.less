@@ -82,15 +82,7 @@ header {
         border: 1px solid #aa3333;
         color: #eeaaaa;
     }
-    &.hovered {
-        background: #a6a6a6;
-        background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#a6a6a6));
-        background: -webkit-linear-gradient(top, #f0f0f0, #a6a6a6);
-        background: -moz-linear-gradient(top, #f0f0f0, #a6a6a6);
-        background: -ms-linear-gradient(top, #f0f0f0, #a6a6a6);
-        background: -o-linear-gradient(top, #f0f0f0, #a6a6a6);
-        background-image: -ms-linear-gradient(top, #f0f0f0 0%, #a6a6a6 100%);
-    }
+    
 }
 .search_input input:focus,
 .search_facet input:focus {
@@ -275,3 +267,13 @@ span.label{
 ::-webkit-scrollbar-track-piece{background-color:#FAFAFA;-webkit-border-radius:0;-webkit-border-bottom-right-radius:8px;-webkit-border-bottom-left-radius:8px;}
 ::-webkit-scrollbar-thumb:vertical{height:50px;background-color:#999;-webkit-border-radius:8px;}
 ::-webkit-scrollbar-thumb:horizontal{width:50px;background-color:#999;-webkit-border-radius:8px;}
+
+.inverted.item:hovered {
+        background: #a6a6a6;
+        background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#a6a6a6));
+        background: -webkit-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -moz-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -ms-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background: -o-linear-gradient(top, #f0f0f0, #a6a6a6);
+        background-image: -ms-linear-gradient(top, #f0f0f0 0%, #a6a6a6 100%);
+    }

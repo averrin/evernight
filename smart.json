@@ -3,6 +3,7 @@
     "observatory": {},
     "collection-api": {},
     "node-modules": {},
-    "aloha-editor": {}
+    "aloha-editor": {},
+    "deps-extensions": {}
   }
 }
