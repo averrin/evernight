@@ -61,6 +61,13 @@ Meteor.startup(->
                     try
                         content = $.parseJSON(myCodeMirror.getValue())
                         root.SERVERS.update {_id: $(ev.target).attr('data-uuid')}, {$set: content}
+                        new_serv = root.SERVERS.findOne {_id: $(ev.target).attr('data-uuid')}
+                        _.each new_serv, (e,i)->
+                            if _.indexOf(['owner', '_id'], i) == -1
+                                if _.indexOf(_.keys(content), i) == -1
+                                    mod = {$unset: {}}
+                                    mod['$unset'][i] = 1
+                                    root.SERVERS.update {_id: new_serv._id}, mod
                         root.update_servers()
                     catch error
                         myCodeMirror.openDialog root.json_error
