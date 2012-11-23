@@ -9,10 +9,10 @@ root = global ? window
 
 root.online = ->
     console.log 'online'
-    
+
 root.offline = ->
     console.log 'offline'
-    
+
 root.toggle_sidebar = ->
     if not root.right.isOpen
         root.right.open '500', ->
@@ -45,12 +45,12 @@ root.ping = (ip, online, offline) ->
             _that.ans = true
             _that.bad()
     , 1500)
-    
+
 root.json_error = '<div class="alert alert-error">
                     <button type="button" class="close" data-dismiss="alert">&#215;</button>
                     <strong>Error!</strong> Bad JSON format!</div>'
 
-    
+
 root.edit_collection = (collection, filtered)->
     if not filtered
         _coll = collection.find(owner: Meteor.user()._id).fetch()
@@ -73,7 +73,7 @@ root.edit_collection = (collection, filtered)->
             root.cm_config
         )
 
-        
+
     if not filtered
         $(".save_collection").click (ev)->
             ev.preventDefault()
@@ -95,9 +95,9 @@ root.edit_collection = (collection, filtered)->
                 $('.reveal-modal').trigger 'reveal:close'
             catch error
                 myCodeMirror.openDialog root.json_error
-        
-    
-   
+
+
+
 root.login = ->
     counter = 0
     $('#login input').each (i,e)->
@@ -120,8 +120,8 @@ root.login = ->
 
 root.init_users = ->
     root.Accounts.createUser({username:'a',email:'a@gmail.com',password:'a',profile:{name:'Averrin'}})
-    
-    
+
+
 
 root.dialog = (id, title, content)->
     d = root.Template.modal
@@ -138,31 +138,34 @@ root.pr = ->
     root.controller[k]()
     console.log 'process hash', root.h
     root.controller.navigate root.h, true
-    
+
 Meteor.startup(->
 
     root.SERVERS  = new root.Meteor.Collection("SERVERS")
-    
+
     root.CONFIGS  = new root.Meteor.Collection("CONFIGS")
-    
+
     root.ALIASES  = new root.Meteor.Collection("ALIASES")
-    
+
     root.KEYS  = new root.Meteor.Collection("KEYS")
-    
+
+    root.PROJECTS  = new root.Meteor.Collection("PROJECTS")
+
     root.collections =
         'Servers': root.SERVERS
         'Configs': root.CONFIGS
         'Aliases': root.ALIASES
         'Keys': root.KEYS
-        
-    
+        'Projects': root.PROJECTS
+
+
     #ALIASES.insert({c:'fab -f ~/nervarin.py', a:'n', owner:Meteor.user()._id})
     #ALIASES.insert({c:'sudo pip install', a:'pipi', owner:Meteor.user()._id})
-  
+
     if root.Meteor.is_server
         Meteor.publish '', ->
             root.SERVERS.find(owner: this.userId)
-            
+
         root.SERVERS.allow
             insert: (userId, doc) ->
                 userId and doc.owner is userId
@@ -177,10 +180,10 @@ Meteor.startup(->
                     doc.owner is userId
 
             fetch: ["owner"]
-            
+
         Meteor.publish '', ->
             root.CONFIGS.find(owner: this.userId)
-            
+
         root.CONFIGS.allow
             insert: (userId, doc) ->
                 userId and doc.owner is userId
@@ -195,10 +198,10 @@ Meteor.startup(->
                     doc.owner is userId
 
             fetch: ["owner"]
-            
+
         Meteor.publish '', ->
             root.ALIASES.find(owner: this.userId)
-            
+
         root.ALIASES.allow
             insert: (userId, doc) ->
                 userId and doc.owner is userId
@@ -213,11 +216,29 @@ Meteor.startup(->
                     doc.owner is userId
 
             fetch: ["owner"]
-            
+
         Meteor.publish '', ->
             root.KEYS.find(owner: this.userId)
-            
+
         root.KEYS.allow
+            insert: (userId, doc) ->
+                userId and doc.owner is userId
+
+            update: (userId, docs, fields, modifier) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+
+            remove: (userId, docs) ->
+                _.all docs, (doc) ->
+                    doc.owner is userId
+
+            fetch: ["owner"]
+
+        Meteor.publish '', ->
+            root.PROJECTS.find(owner: this.userId)
+
+        root.PROJECTS.allow
             insert: (userId, doc) ->
                 userId and doc.owner is userId
 
@@ -235,9 +256,11 @@ Meteor.startup(->
         root.collectionApi = new root.CollectionAPI( authToken: '3d714fb7-a389-4748-a781-2f9329fbc280')
         root.collectionApi.addCollection(root.SERVERS, 'SERVERS')
         root.collectionApi.addCollection(root.KEYS, 'KEYS')
+        root.collectionApi.addCollection(root.KEYS, 'PROJECTS')
+        root.collectionApi.addCollection(Meteor.users, 'PROFILES')
         root.collectionApi.start()
-            
- 
+
+
     root.Meteor.methods
         upload_servers: ->
             fs = __meteor_bootstrap__.require("fs")
@@ -250,7 +273,7 @@ Meteor.startup(->
                 e['alias'] = i
                 SERVERS.insert e
             console.log 'uploaded'
-            
+
         backup_servers: ->
             fs = __meteor_bootstrap__.require("fs")
             path = __meteor_bootstrap__.require("path")
@@ -262,42 +285,42 @@ Meteor.startup(->
             console.log 'backed up'
 
     if root.Meteor.is_client
-    
+
         root.Template.body.rendered = ->
             if window.location.hostname is 'en.averr.in'
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
-                    
+
             _.each root.shortcuts, (e,i)->
                 root.Mousetrap.bind e.key, e.func
-                
-                
+
+
             root.Mousetrap.bind "?", ->
                 root.dialog 'help', 'Help', root.Mustache.render('
                     <h3>:keys</h3>
                     <ul>{{#shortcuts}}
                         <li><strong>&lt;{{key}}&gt;</strong>&nbsp;&mdash;&nbsp;{{desc}}</li>
                     {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
-                    
+
             $('.title').click ->
                 root.toggle_sidebar()
-                
+
             root.right.show()
-                    
+
         root.Template.main.lorem = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
             if user and user.profile.lorem
                 return root.Mustache.render(user.profile.lorem, user.profile)
             else
                 'Lorem ipsum'
-                
+
         root.Template.main.placeholder = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
             if user and user.profile.lorem
                 return root.Mustache.render(user.profile.placeholder, user.profile)
             else
                 'Lorem ipsum'
-    
+
         #Session.set 'collections', Meteor.users.findOne({_id: Meteor.user()._id}).profile.collections
         root.Template.sidebar.collections = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
@@ -305,8 +328,8 @@ Meteor.startup(->
                 return user.profile.collections
             else
                 []
-            
-            
+
+
 
         root.foldFunc = root.CodeMirror.newFoldFunction root.CodeMirror.braceRangeFinder
         root.cm_config =
@@ -322,8 +345,8 @@ Meteor.startup(->
                     root.foldFunc cm, cm.getCursor().line
                 "Ctrl-S": (cm)->
                     $('.reveal-content button').click()
-    
-        root.Template.sidebar.events = 
+
+        root.Template.sidebar.events =
             "click .edit_collection": (ev)->
                 ev.preventDefault()
                 key = $(ev.target).attr('data-collection')
@@ -331,17 +354,17 @@ Meteor.startup(->
             "mouseenter .side>.inverted": (ev)->
                 console.log ev.target
                 $(ev.target).toggleClass 'hovered'
-                
+
             "click .edit_profile": (ev)->
                 ev.preventDefault()
                 root.edit_collection Meteor.user().profile, true
-                
+
             "click .hide_sidebar": (ev)->
                 ev.preventDefault()
                 root.toggle_sidebar()
-                
-                
-        
+
+
+
         root.Handlebars.registerHelper 'each_with_index', (array, obj) ->
             ret = ''
             _.each array, (e, i) ->
@@ -383,7 +406,7 @@ Meteor.startup(->
                 ev.preventDefault()
                 Meteor.logout()
 
- 
+
         root.Controller = root.Backbone.Router.extend
             routes:
                 #"": 'reset'
@@ -406,18 +429,17 @@ Meteor.startup(->
                 )
 
         root.controller = new root.Controller
-        root.Backbone.history.start()       
+        root.Backbone.history.start()
 
         $('body').append Meteor.render(->
             Template.body()
         )
-        
+
         $('.aloha-sidebar-inner').html Meteor.render(->
             Template.sidebar()
         )
-        
+
         console.log "Evernight Init"
-              
+
 
 )
-

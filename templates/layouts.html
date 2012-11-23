@@ -9,36 +9,41 @@
             {{/if}}
         </header>
 
-		<content>
+        <content>
         {{#if currentUser}}
             {{>two_columns}}
         {{else}}
-            {{>login}}            
+            {{>login}}
         {{/if}}
-		</content>
+        </content>
 </template>
- 
+
  <template name="two_columns">
     <div id="wrapper">
-	<div class="row-fluid">
+    <div class="row-fluid">
 
-		<div class="span7 left" style="margin-bottom: 20px;" id="lcolumn">
-			<div id="left-content" class="well inverted">
+        <div class="span7 left" style="margin-bottom: 20px;" id="lcolumn">
+        <div class="powers">
+            <!-- <i class="right icon-wrench icon-white" style="margin: 6px;"></i> -->
+        </div>
+            <div id="left-content" class="well inverted">
                 {{>main}}
-			</div>
-			<div class="inverted bottom"></div>
-		</div>
+            </div>
+            <div class="inverted bottom"></div>
+        </div>
 
-		<div class="span5 right"  style="" id="rcolumn">
-				<div id="content" class="well inverted">
+        <div class="span5 right"  style="" id="rcolumn">
+        <div class="powers">
+        </div>
+                <div id="content" class="well inverted">
                     {{>servers}}
-				</div>
-				<div class="inverted bottom"></div>
-		</div>
-        
-	
-	</div>
+                </div>
+                <div class="inverted bottom"></div>
+        </div>
+
+
+    </div>
     </div>
 
-	<!--<div class="side inverted" style="display: none;"></div>-->
+    <!--<div class="side inverted" style="display: none;"></div>-->
 </template>
