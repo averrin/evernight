@@ -139,6 +139,17 @@ root.pr = ->
     console.log 'process hash', root.h
     root.controller.navigate root.h, true
 
+
+root.pre_tabs = [
+                title: ':main'
+                hash: 'main'
+                color: '#ff8e42'
+            ,
+                title: ":config"
+                hash: "options"
+                color: '#6fb95e'
+            ]
+
 Meteor.startup(->
 
     root.SERVERS  = new root.Meteor.Collection("SERVERS")
@@ -221,8 +232,6 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
 
-            root.right.show()
-
         _.each root.shortcuts, (e,i)->
             root.Mousetrap.bind e.key, e.func
 
@@ -243,7 +252,7 @@ Meteor.startup(->
 
         root.Template.main.placeholder = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
-            if user and user.profile.lorem
+            if user and user.profile.placeholder
                 return root.Mustache.render(user.profile.placeholder, user.profile)
             else
                 'Lorem ipsum'
@@ -254,11 +263,12 @@ Meteor.startup(->
 
         #Session.set 'collections', Meteor.users.findOne({_id: Meteor.user()._id}).profile.collections
         root.Template.sidebar.collections = ->
-            user = Meteor.users.findOne({_id: Meteor.user()._id})
-            if user
-                return user.profile.collections
-            else
-                []
+            if Meteor.user()
+                user = Meteor.users.findOne({_id: Meteor.user()._id})
+                if user
+                    return user.profile.collections
+                else
+                    []
 
 
 
@@ -307,9 +317,14 @@ Meteor.startup(->
             new Handlebars.SafeString arg
 
 
-        root.Template.login.events = "keyup input": (ev)->
-            if ev.keyCode is 13
-                root.login()
+        root.Template.login.rendered = ->
+            root.right.hide()
+
+            $('input').live "keyup", (ev)->
+                if ev.keyCode is 13
+                    root.login()
+
+
         root.Template.main.events =
             "click #logout": (ev)->
                 root.controller.navigate '!/logout', trigger: true
@@ -334,14 +349,21 @@ Meteor.startup(->
 
         root.Template.two_columns.page = ->
             tpl = Session.get 'page'
-            tab = root.TABS.findOne hash: tpl
+            pre = []
+            pre = pre.concat root.pre_tabs
+            _.each root.TABS.find().fetch(), (e,i)->
+                pre.push e
+            tab = undefined
+            _.each pre, (e,i)->
+                if e.hash == tpl
+                    tab = e
+
             if tab
                 if _.indexOf(_.keys(tab), 'content') != -1
                     tpl = Mustache.render(tab.content, Meteor.users.findOne({_id: Meteor.user()._id}).profile)
                 else
-                    tpl = 'Empty tab'
-            else
-                tpl = root.Template[tpl]()
+                    tpl = root.Template[tpl]()
+
             # tpl = root.Meteor.render ->
                 # tpl()
 
@@ -349,16 +371,32 @@ Meteor.startup(->
             return tpl
 
         root.Template.two_columns.tabs = ->
-            pre = [
-                title: ':main'
-                hash: 'main'
-            ]
+            pre = []
+            pre = pre.concat root.pre_tabs
             _.each root.TABS.find().fetch(), (e,i)->
                 pre.push e
             return pre
 
         root.Template.two_columns.rendered = ->
-            $('.tab_header[data-hash="'+Session.get('page')+'"]').addClass 'active'
+            root.right.show()
+            tpl = Session.get('page')
+            $('.tab_header[data-hash="'+tpl+'"]').addClass 'active'
+            pre = []
+            pre = pre.concat root.pre_tabs
+            _.each root.TABS.find().fetch(), (e,i)->
+                pre.push e
+            tab = undefined
+            _.each pre, (e,i)->
+                if e.hash == tpl
+                    tab = e
+            if tab
+                if _.indexOf(_.keys(tab), 'color') != -1
+                    color = tab.color
+                else
+                    color = "#AEC7E0"
+                $('#left-content').css 'border-left', 'solid 6px '+color
+            else
+                $('#left-content').css 'border-left', 'solid 6px #AEC7E0'
 
 
         root.Template.menu.events =

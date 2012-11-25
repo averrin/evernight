@@ -25,11 +25,11 @@
         <div class="span7 left" style="margin-bottom: 20px;" id="lcolumn">
         <div class="powers">
             {{# each tabs}}
-                <span class="tab_header left" data-hash="{{this.hash}}">{{this.title}}</span>
+                <span class="tab_header left" data-hash="{{this.hash}}" style="border-left: 6px solid {{this.color}}">{{this.title}}</span>
             {{/each}}
             <!-- <i class="right icon-wrench icon-white" style="margin: 6px;"></i> -->
         </div>
-            <div id="left-content" class="well inverted">
+            <div id="left-content" class="inverted">
                 {{{page}}}
             </div>
             <div class="inverted bottom"></div>
@@ -38,7 +38,7 @@
         <div class="span5 right"  style="" id="rcolumn">
         <div class="powers">
         </div>
-                <div id="content" class="well inverted">
+                <div id="content" class="inverted">
                     {{>servers}}
                 </div>
                 <div class="inverted bottom"></div>
