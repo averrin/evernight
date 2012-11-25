@@ -24,10 +24,13 @@
 
         <div class="span7 left" style="margin-bottom: 20px;" id="lcolumn">
         <div class="powers">
+            {{# each tabs}}
+                <span class="tab_header left" data-hash="{{this.hash}}">{{this.title}}</span>
+            {{/each}}
             <!-- <i class="right icon-wrench icon-white" style="margin: 6px;"></i> -->
         </div>
             <div id="left-content" class="well inverted">
-                {{>main}}
+                {{{page}}}
             </div>
             <div class="inverted bottom"></div>
         </div>

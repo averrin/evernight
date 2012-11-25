@@ -151,107 +151,38 @@ Meteor.startup(->
 
     root.PROJECTS  = new root.Meteor.Collection("PROJECTS")
 
+    root.TABS  = new root.Meteor.Collection("TABS")
+
     root.collections =
         'Servers': root.SERVERS
         'Configs': root.CONFIGS
         'Aliases': root.ALIASES
         'Keys': root.KEYS
         'Projects': root.PROJECTS
-
-
-    #ALIASES.insert({c:'fab -f ~/nervarin.py', a:'n', owner:Meteor.user()._id})
-    #ALIASES.insert({c:'sudo pip install', a:'pipi', owner:Meteor.user()._id})
+        'Tabs': root.TABS
 
     if root.Meteor.is_server
-        Meteor.publish '', ->
-            root.SERVERS.find(owner: this.userId)
 
-        root.SERVERS.allow
-            insert: (userId, doc) ->
-                userId and doc.owner is userId
+        _.each root.collections, (e,i)->
 
-            update: (userId, docs, fields, modifier) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
+            Meteor.publish '', ->
+                e.find(owner: this.userId)
 
+            e.allow
+                insert: (userId, doc) ->
+                    userId and doc.owner is userId
 
-            remove: (userId, docs) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-            fetch: ["owner"]
-
-        Meteor.publish '', ->
-            root.CONFIGS.find(owner: this.userId)
-
-        root.CONFIGS.allow
-            insert: (userId, doc) ->
-                userId and doc.owner is userId
-
-            update: (userId, docs, fields, modifier) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
+                update: (userId, docs, fields, modifier) ->
+                    _.all docs, (doc) ->
+                        doc.owner is userId
 
 
-            remove: (userId, docs) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
+                remove: (userId, docs) ->
+                    _.all docs, (doc) ->
+                        doc.owner is userId
 
-            fetch: ["owner"]
+                fetch: ["owner"]
 
-        Meteor.publish '', ->
-            root.ALIASES.find(owner: this.userId)
-
-        root.ALIASES.allow
-            insert: (userId, doc) ->
-                userId and doc.owner is userId
-
-            update: (userId, docs, fields, modifier) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-
-            remove: (userId, docs) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-            fetch: ["owner"]
-
-        Meteor.publish '', ->
-            root.KEYS.find(owner: this.userId)
-
-        root.KEYS.allow
-            insert: (userId, doc) ->
-                userId and doc.owner is userId
-
-            update: (userId, docs, fields, modifier) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-
-            remove: (userId, docs) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-            fetch: ["owner"]
-
-        Meteor.publish '', ->
-            root.PROJECTS.find(owner: this.userId)
-
-        root.PROJECTS.allow
-            insert: (userId, doc) ->
-                userId and doc.owner is userId
-
-            update: (userId, docs, fields, modifier) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-
-            remove: (userId, docs) ->
-                _.all docs, (doc) ->
-                    doc.owner is userId
-
-            fetch: ["owner"]
 
         root.collectionApi = new root.CollectionAPI( authToken: '3d714fb7-a389-4748-a781-2f9329fbc280')
         root.collectionApi.addCollection(root.SERVERS, 'SERVERS')
@@ -259,7 +190,6 @@ Meteor.startup(->
         root.collectionApi.addCollection(root.KEYS, 'PROJECTS')
         root.collectionApi.addCollection(Meteor.users, 'PROFILES')
         root.collectionApi.start()
-
 
     root.Meteor.methods
         upload_servers: ->
@@ -291,28 +221,25 @@ Meteor.startup(->
                 if not $('.title:first').html().match(/.*\[dev\]/)
                     $('.title:first').append '[dev]'
 
-            _.each root.shortcuts, (e,i)->
-                root.Mousetrap.bind e.key, e.func
-
-
-            root.Mousetrap.bind "?", ->
-                root.dialog 'help', 'Help', root.Mustache.render('
-                    <h3>:keys</h3>
-                    <ul>{{#shortcuts}}
-                        <li><strong>&lt;{{key}}&gt;</strong>&nbsp;&mdash;&nbsp;{{desc}}</li>
-                    {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
-
-            $('.title').click ->
-                root.toggle_sidebar()
-
             root.right.show()
 
-        root.Template.main.lorem = ->
-            user = Meteor.users.findOne({_id: Meteor.user()._id})
-            if user and user.profile.lorem
-                return root.Mustache.render(user.profile.lorem, user.profile)
-            else
-                'Lorem ipsum'
+        _.each root.shortcuts, (e,i)->
+            root.Mousetrap.bind e.key, e.func
+
+
+        root.Mousetrap.bind "?", ->
+            root.dialog 'help', 'Help', root.Mustache.render('
+                <h3>:keys</h3>
+                <ul>{{#shortcuts}}
+                    <li><strong>&lt;{{key}}&gt;</strong>&nbsp;&mdash;&nbsp;{{desc}}</li>
+                {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
+
+
+        $('.tab_header').live 'click', (ev)->
+            ev.preventDefault()
+            h = $(ev.target).data('hash')
+            console.log h
+            Session.set 'page', h
 
         root.Template.main.placeholder = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
@@ -320,6 +247,10 @@ Meteor.startup(->
                 return root.Mustache.render(user.profile.placeholder, user.profile)
             else
                 'Lorem ipsum'
+
+        $('body').append Meteor.render(->
+            Template.body()
+        )
 
         #Session.set 'collections', Meteor.users.findOne({_id: Meteor.user()._id}).profile.collections
         root.Template.sidebar.collections = ->
@@ -401,6 +332,35 @@ Meteor.startup(->
                     Meteor.users.update({_id: Meteor.user()._id}, {$set: {profile: data}})
 
 
+        root.Template.two_columns.page = ->
+            tpl = Session.get 'page'
+            tab = root.TABS.findOne hash: tpl
+            if tab
+                if _.indexOf(_.keys(tab), 'content') != -1
+                    tpl = Mustache.render(tab.content, Meteor.users.findOne({_id: Meteor.user()._id}).profile)
+                else
+                    tpl = 'Empty tab'
+            else
+                tpl = root.Template[tpl]()
+            # tpl = root.Meteor.render ->
+                # tpl()
+
+            # return $('<div></div>').html(tpl).html()
+            return tpl
+
+        root.Template.two_columns.tabs = ->
+            pre = [
+                title: ':main'
+                hash: 'main'
+            ]
+            _.each root.TABS.find().fetch(), (e,i)->
+                pre.push e
+            return pre
+
+        root.Template.two_columns.rendered = ->
+            $('.tab_header[data-hash="'+Session.get('page')+'"]').addClass 'active'
+
+
         root.Template.menu.events =
             "click #logout_link": (ev)->
                 ev.preventDefault()
@@ -409,15 +369,15 @@ Meteor.startup(->
 
         root.Controller = root.Backbone.Router.extend
             routes:
-                #"": 'reset'
+                "": 'reset'
+                "!/:page": 'reset'
                 "!/logout": "logout"
                 #"!/servers": "servers"
-            reset: ->
-                $('title').html ':main'
-                $('#left-content').html Meteor.render(->
-                    if Meteor.user()
-                        Template.main()
-                )
+            reset: (page)->
+                if page
+                    Session.set 'page', page
+                else
+                    Session.set 'page', 'main'
             logout: ->
                 Meteor.logout()
 
@@ -431,9 +391,6 @@ Meteor.startup(->
         root.controller = new root.Controller
         root.Backbone.history.start()
 
-        $('body').append Meteor.render(->
-            Template.body()
-        )
 
         $('.aloha-sidebar-inner').html Meteor.render(->
             Template.sidebar()

@@ -31,6 +31,11 @@ root.shortcuts = [
             "func": ->
                 root.edit_collection root.collections['Keys']
         ,
+            "key": "t"
+            "desc": "Edit Tabs collection"
+            "func": ->
+                root.edit_collection root.collections['Tabs']
+        ,
             "key": "esc"
             "desc": "Close modal dialog"
             "func": ->
@@ -41,7 +46,6 @@ root.shortcuts = [
             "func": ->
                 try
                     visualSearch.searchBox.focusSearch()
-                    
         ,
             "key": "S"
             "desc": "Add new server"
@@ -54,5 +58,4 @@ root.shortcuts = [
             "func": ->
                 ev = new Event('')
                 root.Template.configs.events["click .add_config"](ev)
-                
     ]
