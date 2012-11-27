@@ -201,7 +201,7 @@ Meteor.startup(->
         root.collectionApi = new root.CollectionAPI( authToken: '3d714fb7-a389-4748-a781-2f9329fbc280')
         root.collectionApi.addCollection(root.SERVERS, 'SERVERS')
         root.collectionApi.addCollection(root.KEYS, 'KEYS')
-        root.collectionApi.addCollection(root.KEYS, 'PROJECTS')
+        root.collectionApi.addCollection(root.PROJECTS, 'PROJECTS')
         root.collectionApi.addCollection(Meteor.users, 'PROFILES')
         root.collectionApi.start()
 
