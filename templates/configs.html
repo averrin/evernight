@@ -1,13 +1,13 @@
 
 <template name="configs">
     <div  style="height: 40px;">
-        <span style="font-size: 18pt" class="right">:config templates</span>
+        <span style="font-size: 18pt;margin-top: 6px;" class="right">:config templates</span>
         <button class="add_config left">New config</button>
     </div>
     <div id="configs">
             {{# each configs}}
             <div class="inverted item">
-                 <span class="right"> 
+                 <span class="right">
                     <span class="left edit-link"><a class="edit_config" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
                     <span class="left edit-link"><a class="del_config" href="#" data-uuid="{{this._id}}">[:del]</a></span>
                  </span>
@@ -16,4 +16,4 @@
             </div>
             {{/each}}
     </div>
-</template>      
+</template>

@@ -1,0 +1,18 @@
+<template name="projects">
+	<div  style="height: 40px;">
+        <span style="font-size: 18pt;margin-top: 6px;" class="right">:projects</span>
+        <button class="add_project left">New project</button>
+    </div>
+    <div id="configs">
+            {{# each projects}}
+            <div class="inverted item">
+                 <span class="right">
+                    <span class="left edit-link"><a class="edit_project" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
+                    <span class="left edit-link"><a class="del_project" href="#" data-uuid="{{this._id}}">[:del]</a></span>
+                 </span>
+                <strong>Title:</strong> {{this.title}} <br>
+                <small class="comment"><em>#{{this.desc}}</em></small>
+            </div>
+            {{/each}}
+    </div>
+</template>

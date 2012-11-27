@@ -1,3 +1,20 @@
 <template name="options">
-	Page exists
+	<div  style="height: 40px;">
+        <span style="font-size: 18pt;margin-top: 6px;" class="right">:tabs</span>
+        <button class="add_tab left">New tab</button>
+    </div>
+	<div class="tabs">
+		{{#each tabs}}
+			<div class="inverted item" style="border-left: 6px solid {{this.color}}; padding: 6px;">
+				<span class="right">
+                    <span class="left edit-link"><a class="edit_tab" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
+                    {{#unless system}}
+                    <span class="left edit-link"><a class="del_tab" href="#" data-uuid="{{this._id}}">[:del]</a></span>
+                    {{/unless}}
+                 </span>
+				<strong>Tab "{{this.title}}" {{#if system}}(system){{/if}}</strong> <br>
+				<sma;; class="comment">#!/{{this.hash}}</sma;;>
+			</div>
+		{{/each}}
+	</div>
 </template>

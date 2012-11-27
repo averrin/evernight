@@ -36,6 +36,11 @@ root.shortcuts = [
             "func": ->
                 root.edit_collection root.collections['Tabs']
         ,
+            "key": "p"
+            "desc": "Edit Projects collection"
+            "func": ->
+                root.edit_collection root.collections['Projects']
+        ,
             "key": "esc"
             "desc": "Close modal dialog"
             "func": ->

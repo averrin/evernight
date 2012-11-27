@@ -1,17 +1,17 @@
 root = global ? window
 
 Meteor.startup(->
-    if root.Meteor.is_client       
-        
+    if root.Meteor.is_client
+
         root.Template.configs.configs = ->
             root.CONFIGS.find().fetch()
-            
-            
-        root.Template.configs.events = 
+
+
+        root.Template.configs.events =
             "click .add_config": (ev)->
                 ev.preventDefault()
                 $("#add_config").remove()
-                root.dialog 'add_config', 'New server',
+                root.dialog 'add_config', 'New config',
                     '<input placeholder=":title" id="config_title"> <br>
                     <input placeholder=":comment" id="config_comment">
                     <div id="config_editor">
@@ -25,14 +25,15 @@ Meteor.startup(->
                 )
                 $(".save_new_config").click (ev)->
                     ev.preventDefault()
-                    $('.reveal-modal').trigger 'reveal:close'
                     config =
                         title: $('#config_title').val()
                         comment: $('#config_comment').val()
                         content: myCodeMirror.getValue()
                         owner: Meteor.user()._id
                     root.CONFIGS.insert config
-                    
+                    $('.reveal-modal').trigger 'reveal:close'
+                    $("#add_config").remove()
+
             "click .edit_config": (ev)->
                 ev.preventDefault()
                 id = this._id
@@ -51,14 +52,11 @@ Meteor.startup(->
                     ev.preventDefault()
                     root.CONFIGS.update {_id: $(ev.target).attr('data-uuid')}, {$set: {content: myCodeMirror.getValue()}}
                     $('.reveal-modal').trigger 'reveal:close'
-                
+                    $('#edit_config_'+id).remove()
+
             "click .del_config": (ev)->
                 ev.preventDefault()
                 console.log 'del config'
                 root.CONFIGS.remove this._id
-                
-            "mouseenter .side>.inverted": (ev)->
-                console.log ev.target
-                $(ev.target).toggleClass 'hovered'
-                
+
 )

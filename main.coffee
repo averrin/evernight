@@ -1,10 +1,3 @@
-###
-    TODO:
-        * CodeMirror editor creation method
-        * Edit collection dialog (maybe to sidebar)
-        * Refactor less
-###
-
 root = global ? window
 
 root.online = ->
@@ -144,10 +137,20 @@ root.pre_tabs = [
                 title: ':main'
                 hash: 'main'
                 color: '#ff8e42'
+                system: true
+                shortcut: "alt+1"
             ,
                 title: ":config"
                 hash: "options"
                 color: '#6fb95e'
+                system: true
+                shortcut: "alt+2"
+            ,
+                title: ":projects"
+                hash: "projects"
+                color: '#7d1935'
+                system: true
+                shortcut: "alt+3"
             ]
 
 Meteor.startup(->
@@ -235,6 +238,11 @@ Meteor.startup(->
         _.each root.shortcuts, (e,i)->
             root.Mousetrap.bind e.key, e.func
 
+        _.each root.pre_tabs, (e,i)->
+            root.Mousetrap.bind e.shortcut, ->
+                console.log 'Shotrcut to', e.hash
+                Session.set 'page', e.hash
+
 
         root.Mousetrap.bind "?", ->
             root.dialog 'help', 'Help', root.Mustache.render('
@@ -244,11 +252,11 @@ Meteor.startup(->
                 {{/shortcuts}}</ul>', shortcuts: root.shortcuts)
 
 
-        $('.tab_header').live 'click', (ev)->
+        $('#lcolumn .tab_header').live 'click', (ev)->
             ev.preventDefault()
             h = $(ev.target).data('hash')
-            console.log h
-            Session.set 'page', h
+            # Session.set 'page', h
+            root.controller.navigate '!/'+h, true
 
         root.Template.main.placeholder = ->
             user = Meteor.users.findOne({_id: Meteor.user()._id})
@@ -348,27 +356,28 @@ Meteor.startup(->
 
 
         root.Template.two_columns.page = ->
-            tpl = Session.get 'page'
-            pre = []
-            pre = pre.concat root.pre_tabs
-            _.each root.TABS.find().fetch(), (e,i)->
-                pre.push e
-            tab = undefined
-            _.each pre, (e,i)->
-                if e.hash == tpl
-                    tab = e
+            if Meteor.userLoaded()
+                tpl = Session.get 'page'
+                pre = []
+                pre = pre.concat root.pre_tabs
+                _.each root.TABS.find().fetch(), (e,i)->
+                    pre.push e
+                tab = undefined
+                _.each pre, (e,i)->
+                    if e.hash == tpl
+                        tab = e
 
-            if tab
-                if _.indexOf(_.keys(tab), 'content') != -1
-                    tpl = Mustache.render(tab.content, Meteor.users.findOne({_id: Meteor.user()._id}).profile)
-                else
-                    tpl = root.Template[tpl]()
+                if tab
+                    if _.indexOf(_.keys(tab), 'content') != -1
+                        tpl = Mustache.render(tab.content, Meteor.users.findOne({_id: Meteor.user()._id}).profile)
+                    else
+                        tpl = root.Template[tpl]()
 
-            # tpl = root.Meteor.render ->
-                # tpl()
+                # tpl = root.Meteor.render ->
+                    # tpl()
 
-            # return $('<div></div>').html(tpl).html()
-            return tpl
+                # return $('<div></div>').html(tpl).html()
+                return tpl
 
         root.Template.two_columns.tabs = ->
             pre = []

@@ -20,9 +20,9 @@ root.server_template =
 root.update_servers = ->
     $('.reveal-modal').trigger 'reveal:close'
     root.visualSearch.options.callbacks.search(Session.get('q'), root.visualSearch.searchQuery)
-    
-    
-   
+
+
+
 root.compile_config = (config_name, server)->
     if server.aliases
         _.each root.ALIASES.find().fetch(), (e,i)->
@@ -35,7 +35,7 @@ root.compile_config = (config_name, server)->
 
 Meteor.startup(->
     if root.Meteor.is_client
-    
+
         root.Template.servers.events =
             "click .view_server": (ev)->
                 ev.preventDefault()
@@ -68,6 +68,7 @@ Meteor.startup(->
                                     mod = {$unset: {}}
                                     mod['$unset'][i] = 1
                                     root.SERVERS.update {_id: new_serv._id}, mod
+                        $('#edit_server_'+id).remove()
                         root.update_servers()
                     catch error
                         myCodeMirror.openDialog root.json_error
@@ -87,6 +88,7 @@ Meteor.startup(->
                         server = $.parseJSON(myCodeMirror.getValue())
                         server['owner'] = Meteor.user()._id
                         root.SERVERS.insert server
+                        $("#add_server").remove()
                         root.update_servers()
                     catch error
                         myCodeMirror.openDialog root.json_error
@@ -94,7 +96,7 @@ Meteor.startup(->
                 ev.preventDefault()
                 root.SERVERS.remove this._id
                 root.update_servers()
-                
+
             "click .view_config": (ev)->
                 ev.preventDefault()
                 $("#view_config").remove()
@@ -135,7 +137,7 @@ Meteor.startup(->
                 return ss
             else
                 root.SERVERS.find({}, {sort: {alias:1}}).fetch()
-            
+
 
         root.Template.servers.rendered = ->
             root.visualSearch = VS.init(
@@ -155,7 +157,7 @@ Meteor.startup(->
                         Session.set 'q', query
                         Session.set 'servers', ''
                         Session.set 'servers', root.SERVERS.find(q, {sort: {alias:1}}).fetch()
-                        
+
 
                     facetMatches: (callback) ->
                         callback ['ip', 'host', 'tags', 'groups', 'alias', 'os']
@@ -200,5 +202,5 @@ Meteor.startup(->
             )
             visualSearch = root.visualSearch
             root.visualSearch.searchBox.value Session.get 'q'
-            
+
 )
