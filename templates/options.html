@@ -3,9 +3,9 @@
         <span style="font-size: 18pt;margin-top: 6px;" class="right">:tabs</span>
         <button class="add_tab left">New tab</button>
     </div>
-	<div class="tabs">
+	<div class="tabs" class="item-container">
 		{{#each tabs}}
-			<div class="inverted item" style="border-left: 6px solid {{this.color}}; padding: 6px;">
+			<div class="inverted item" style="border-left: 6px solid {{this.color}};">
 				<span class="right">
                     <span class="left edit-link"><a class="edit_tab" href="#" data-uuid="{{this._id}}">[:edit]</a></span>
                     {{#unless system}}

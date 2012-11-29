@@ -203,6 +203,7 @@ Meteor.startup(->
         root.collectionApi.addCollection(root.KEYS, 'KEYS')
         root.collectionApi.addCollection(root.PROJECTS, 'PROJECTS')
         root.collectionApi.addCollection(Meteor.users, 'PROFILES')
+        root.collectionApi.addCollection(root.CONFIGS, 'CONFIGS')
         root.collectionApi.start()
 
     root.Meteor.methods

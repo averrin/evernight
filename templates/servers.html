@@ -2,7 +2,6 @@
     <div style="margin-bottom: 40px;">
         {{#constant}}
         <div style="margin: 6px auto; height: 40px;">
-            
             <button class="add_server left" style="margin-top: 4px; margin-right: 10px;">New Server</button>
             <span class="visual_search left" style="min-width: 20%;"></span>
         </div>
@@ -13,7 +12,7 @@
 </template>
 
 <template name="servers_list">
-        <div id="servers">
+        <div id="servers" class="item-container">
         {{# each servers_list}}
             <div data-uuid="{{this._id}}" class="inverted item">
                 <span class="edit-links right">
